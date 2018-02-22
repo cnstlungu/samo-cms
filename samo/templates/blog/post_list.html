@@ -1,0 +1,15 @@
+
+{% if not paginated: %}
+    {% for post in posts %}
+	{% if post.publish == True %}
+            {% include "blog/post.html"%}
+	{% endif %}
+    {% endfor %}
+{% elif paginated: %}
+    {% for post in posts.items %}
+	{% if post.publish == True %}
+            {% include "blog/post.html"%}
+    {% endif %}
+	{% endfor %}
+	
+{% endif %}

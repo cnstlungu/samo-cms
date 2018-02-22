@@ -1,0 +1,34 @@
+{% from "form_macros.html" import render_field %}
+<article class="post">
+
+
+<section class="post-title">
+		<h3>
+			<a href="{{ url_for('blog.detail', slug=post.slug) }}">{{post.title}} </a>
+		</h3>
+</section>
+
+<section class="post-content">
+  {% if short == True %}  
+    {{post.content|truncate(1000,end=' ...')|safe}}  
+    <a href ="{{ url_for('blog.detail', slug=post.slug) }}">continue reading</a>
+  {% else %} 
+    {{post.content|safe}}
+  {% endif %}
+</section>
+<br>
+<section class="post-info">
+	<span class="post-tags">
+    {% if post.tags %}
+        {% for t in post.tags %}<b>
+          <span  class="label label-default"><a href="{{ url_for('blog.tag', name=t.name) }}">{{ t }}</a></span></b>
+        {% endfor %}
+    {% else %} No tags.
+    {% endif %}
+	</span>
+	<span class="label">
+	<a href="{{url_for('blog.user',username=post.user.username)}}">posted by {{post.user.username}} {{ moment(post.date).fromNow() }}</a> <a href="#">•</a> <a href="{{ url_for('blog.detail', slug=post.slug) }}#comments">{{post.comments|length}} comment(s)</a>
+</span>
+</section>
+<hr>
+</article>

@@ -1,0 +1,163 @@
+body {
+	font-family: Arial;
+}
+
+/*SIDEBAR*/
+.sidebar
+{
+	text-align: center;
+}
+
+
+/*FLASH MESSAGE*/
+.flashes li {
+	list-style-type: none;
+}
+
+.post img {
+  display: block !important;
+  width: 75% !important;
+  height: auto !important;
+}
+
+
+/*PREFORMATTED CODE*/
+pre {
+	
+	background-color: black;
+	color: white;
+}
+
+#comments {
+	font-family: Segoe UI, Arial;
+}
+
+/*SVG*/
+svg {
+	width: 100% !important;
+	height: 100% !important;
+	stroke:rgb(0,0,0);
+}
+
+/*TABLES*/
+table
+{
+	width: 100% !important;
+	margin-bottom: 20px;
+}
+
+.error, .error input {
+	color: red;
+}
+
+tr.error td ul {
+	margin-top: 0;
+}
+
+tr.submit button {
+	margin-top: 20px;
+}
+
+input, textarea,
+div.select2-container {
+	width:100%;
+}
+
+input[type="checkbox"],
+input[type="submit"] {
+	width: auto;
+}
+
+input, button, textarea,
+div.select2-container {
+	margin-left: 10px;
+}
+
+.tags a {
+	color: white;
+}
+
+.post-info h5 {
+	display: inline;
+	padding-right: 10px;
+}
+
+.post-info p {
+	display: inline;
+	color: black;
+}
+
+.post-tagname, .post-tags a{
+	color: white;
+}
+
+.tags ul {
+	list-style-type: none;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+	font-family: Segoe UI, Arial;
+	vertical-align: middle;
+}
+
+
+#comments .avatar
+{
+float: left;
+}
+
+#comments .comment-text
+{
+float: right;
+}
+
+#comments li:nth-child(2n){
+	background-color: #ebe8e8;
+}
+
+/* MOBILE */
+
+@media all and (max-width: 768px) { 
+
+
+	h1 {
+		text-align: center;
+	}
+
+
+
+	nav {
+		text-align: center;
+		
+	}
+
+	section h3
+
+	{
+		text-align: center;
+	}
+
+	.sidebar div {
+		text-align: center;
+	}
+
+	.navbar-header{
+		text-align: center;
+		padding: 30px;
+	}
+
+	.navbar-brand {
+		float:none;
+	}
+
+	.navbar-nav{
+		font-size: 18px;	
+	}
+
+	.post img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;}
+
+}

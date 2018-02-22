@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "form_macros.html" import render_field %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/select2.css') }}">
+{% endblock %}
+
+{% block title %}
+{{current_user.displayname}} · {{ title }}
+{%  endblock %}
+
+{% block content %}
+    <section class="well">
+        <h3>{{ title }}</h3>
+        <form action="" method="post">
+            {{form.hidden_tag()}}
+            <table>
+			    {{ render_field(form.title,class_="form-control",  rows=15, cols = 50) }}
+                {{ render_field(form.content, class_="form-control",  rows=15, cols = 50) }}
+                {{ render_field(form.ptags, size=50, id="tags") }}
+                <tr class="submit">
+                    <td></td>
+                    <td><button id="postadd-submit" type="submit" class="btn btn-primary">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+<script>
+$(document).ready(function(){
+    var tags = {{ all_tags()|map(attribute='name')|list|tojson|safe }};
+   $('#tags').select2({tags: tags, tokenSeparators: [",", " "]});
+   });
+</script>
+{% endblock %}

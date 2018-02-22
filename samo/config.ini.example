@@ -1,0 +1,8 @@
+[ENV]
+SAMO_ENV=your_environment_name
+
+[DB]
+SAMO_SERVER=your_server
+SAMO_DB=your_db
+SAMO_USER=your_user
+SAMO_PASS=your_password

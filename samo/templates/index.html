@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+{% block greeting %}
+<article>
+    <header>
+        <h1>Welcome!</h1>
+        <p>This is a blog.</p>
+    </header>
+</article>
+
+{% endblock %}
+
+{% block content %}
+
+{% if not posts.items %}
+<h1> No entries. </h1>
+{% endif %}
+
+{% with posts = posts, short=True, paginated = True %}
+
+
+{% include "blog/post_list.html" %}
+
+{% endwith %}
+
+
+<div >
+    <ul class="pager">
+{% if posts.has_prev %} <li><a href="{{ url_for('index', page=posts.prev_num) }}">< Newer posts</a></li>{% else %}{% endif %}
+{% if posts.has_next %}<li><a href="{{ url_for('index', page=posts.next_num) }}">Older posts > </a></li>{% else %}{% endif %}
+    </ul>
+</div>
+
+{% endblock %}

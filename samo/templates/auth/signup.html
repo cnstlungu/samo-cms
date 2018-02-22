@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "form_macros.html" import render_field %}
+
+{% block title %}
+Sign-up
+{%  endblock %}
+
+{% block content %}
+    <section class="well col-lg-8">
+        <h3 style="clear:both">Create an account</h3>
+        <br>
+        <form action="" method="post" class="form-controls">
+            {{form.hidden_tag()}}
+            <table>
+                {{ render_field(form.username,class_="form-control", size=30) }}
+                {{ render_field(form.email,class_="form-control", size=30) }}
+                {{ render_field(form.password,class_="form-control", size=30) }}
+                {{ render_field(form.password2,class_="form-control", size=30) }}
+
+                <tr class="submit">
+                    <td></td>
+                    <td><button id="signup-submit" type="submit" class="btn btn-primary">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

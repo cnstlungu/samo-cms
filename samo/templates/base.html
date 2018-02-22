@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="content" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% block styles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% endblock %}
+
+
+
+    <script language="JavaScript" type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>{% block title %}Home{% endblock %} </title>
+</head>
+
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{url_for('index')}}">Home</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                    {% if current_user.is_authenticated:%}
+                    <li><a href="/admin"><p>Administration</p></a></li>
+                    {% endif %}
+
+
+                    {% if current_user.is_authenticated:%}
+                    <li><a href="{{ url_for('blog.add') }}"><p>Add post</p></a></li>
+                    <li><a href="{{ url_for('auth.logout') }}"><p>Log out</p></a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('auth.login') }}"><p>Log in</p></a></li>
+                    {% endif %}
+                    {% if not current_user.is_authenticated:%}
+                    <li><a href="{{ url_for('auth.signup') }}"><p>Sign up</p></a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="col-md-8">
+    <article class="flashes">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <p class="alert alert-success ">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </article>
+</div>
+
+<div class="col-md-9">
+    {% block content %}
+    {% endblock %}
+</div>
+
+{% block sidebar %}
+
+<div class="sidebar-menu col-md-3">
+    <div class="tags">
+        <h4>Tags</h4>
+        {% for t in all_tags() %}
+        <span><a href="{{ url_for('blog.tag', name=t) }}" class="label label-default">{{ t }}</a></span>
+        {% endfor %}
+    </div>
+    <hr>
+    <div>
+        <h4>Follow me</h4>
+        <div class="row">
+            <a class="col-md-4" href="#"><i class="fa fa-github" style="font-size:48px;color:gray"
+                                            aria-hidden="true"></i></a>
+            <a class="col-md-4" href="#"><i class="fa fa-linkedin-square" style="font-size:48px;color:gray"
+                                            aria-hidden="true"></i></a>
+            <a class="col-md-4" href="#"><i class="fa fa-twitter" style="font-size:48px;color:gray"
+                                            aria-hidden="true"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<div>
+    <footer>
+
+    </footer>
+</div>
+{% block scripts %}
+
+{{ moment.include_moment() }}
+
+{% endblock %}
+</body>
+</html>

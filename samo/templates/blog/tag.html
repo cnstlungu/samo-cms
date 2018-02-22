@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+Posts tagged  {{ tag }}
+{%  endblock %}
+
+{% block content %}
+    <article>
+        <header>
+            <h2>Posts tagged <b>{{ tag }}</b></h2>
+            <span><br></span>
+            {% if tag.posts %}
+                {% with posts = tag.posts%}
+                    {% include "blog/post_list.html" %}
+                {% endwith %}
+            {% else %}
+                There are no posts with this tag.
+            {% endif %}
+        </header>
+
+    </article>
+{% endblock %}

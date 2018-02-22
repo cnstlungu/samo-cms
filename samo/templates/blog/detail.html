@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{post.title}}
+{%  endblock %}
+
+{% block content %}
+{% with comments = True %}
+{% include "blog/post.html" %}
+{% include "blog/comments.html" %}
+
+{% endwith %}
+{% endblock %}
+
+
+
