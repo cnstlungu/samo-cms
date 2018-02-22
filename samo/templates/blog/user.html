@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-Posts by {{ user.displayname }}
+Posts by {{ user.display_name }}
 {%  endblock %}
 
 {% block content %}
 <article>
 	<header>
-        <h2>Posts by <b>{{ user.username }}</b></h2>
+        <h2>Posts by <b>{{ user.display_name }}</b></h2>
         <span><br></span>
 
             {% if user.posts.count() > 0 %}

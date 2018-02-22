@@ -13,6 +13,7 @@ Sign-up
             {{form.hidden_tag()}}
             <table>
                 {{ render_field(form.username,class_="form-control", size=30) }}
+                {{ render_field(form.display_name,class_="form-control", size=30) }}
                 {{ render_field(form.email,class_="form-control", size=30) }}
                 {{ render_field(form.password,class_="form-control", size=30) }}
                 {{ render_field(form.password2,class_="form-control", size=30) }}

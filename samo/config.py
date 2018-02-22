@@ -42,7 +42,7 @@ class TestingConfig(Config):
     _db = config['DB']['SAMO_DB']
     _user = config['DB']['SAMO_USER']
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://{}:{}@{}/{}'.format(_user, _pass, _server, _db)
+    SQLALCHEMY_DATABASE_URI = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(_user, _pass, _server, _db)
 
 
 class ProductionConfig(Config):

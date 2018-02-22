@@ -1,5 +1,6 @@
 [ENV]
 SAMO_ENV=your_environment_name
+HOST=your_host_here
 
 [DB]
 SAMO_SERVER=your_server

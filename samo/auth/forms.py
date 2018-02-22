@@ -29,6 +29,7 @@ class SignupForm(Form):
                                Regexp('^[A-Za-z0-9_]{3,}$',
                                       message='Usernames consist of numbers, letters,'
                                               'and underscores.')])
+    display_name = StringField('Name', validators=[Length(2, 20)])
     password = PasswordField('Password',
                              validators=[
                                  DataRequired(),
