@@ -3,9 +3,9 @@ body {
 }
 
 /*SIDEBAR*/
-.sidebar
+.sidebar li
 {
-	text-align: center;
+list-style-type: none
 }
 
 
@@ -73,10 +73,6 @@ div.select2-container {
 	margin-left: 10px;
 }
 
-.tags a {
-	color: white;
-}
-
 .post-info h5 {
 	display: inline;
 	padding-right: 10px;
@@ -85,14 +81,6 @@ div.select2-container {
 .post-info p {
 	display: inline;
 	color: black;
-}
-
-.post-tagname, .post-tags a{
-	color: white;
-}
-
-.tags ul {
-	list-style-type: none;
 }
 
 h1,h2,h3,h4,h5,h6
@@ -135,10 +123,6 @@ float: right;
 	section h3
 
 	{
-		text-align: center;
-	}
-
-	.sidebar div {
 		text-align: center;
 	}
 

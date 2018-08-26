@@ -7,23 +7,24 @@ Login
 
 {% block content %}
 
-    <section class="well col-lg-8">
-        <h3 style="clear: both">Please login</h3>
-        <br>
-        <form action="" method="post" class="form-controls">
-            {{form.hidden_tag()}}
-            <table>
-                {{ render_field(form.username,class_="form-control", size=50) }}
-                {{ render_field(form.password,class_="form-control",  size=50) }}
-                {{ render_field(form.remember_me) }}
-                <tr class="submit">
-                    <td></td>
-                    <td><button type="submit" id="login-submit" class="btn btn-primary">Submit</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </section>
+<h3 style="clear: both">Please login</h3>
+<br>
+<form action="" method="post" class="form-controls">
+    {{form.hidden_tag()}}
+    <table>
+
+
+        {{ render_field(form.username,class_="form-control") }}
+        {{ render_field(form.password,class_="form-control", size=50) }}
+        {{ render_field(form.remember_me) }}
+        <tr class="submit">
+            <td></td>
+            <td>
+                <button type="submit" id="login-submit" class="btn btn-primary">Submit</button>
+            </td>
+        </tr>
+    </table>
+</form>
 {% endblock %}
 
 {% block sidebar %}

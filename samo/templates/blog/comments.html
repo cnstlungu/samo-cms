@@ -1,45 +1,45 @@
-  {% from "form_macros.html" import render_field %}
-  {% if comments: %}
+{% from "form_macros.html" import render_field %}
+{% if comments: %}
+
+{% if post.comments %}
+<div>
+    <ul class="list-group" id='comments'>
+        <li class="list-group-item clearfix heading">
+            <h4>Comments</h4>
+        </li>
+        {% for t in post.comments %}
+        <li class="list-group-item clearfix">
+            <div class="col-md-3 avatar">
+                <b> {{t.name}} </b> · {{moment(t.date).fromNow()}}
+            </div>
+            <div class="col-md-9 comment-text">
+                {{t.content}}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+<br>
+{% endif %}
+
+{% endif %}
+
+
+<form action="" method="post" class="form-controls">
     <div>
-    {% if post.comments %}
-   
-
-  <ul class="list-group" id='comments'>
-  <li class="list-group-item clearfix heading">
-   <h4>Comments</h4>
-  </li>
-  {% for t in post.comments %}
-    <li class="list-group-item clearfix">
-    <div class="col-md-3 avatar">
-    <b> {{t.name}} </b> · {{moment(t.date).fromNow()}}
+        <table>
+            {{ render_field(form.name,class_="form-control", rows=15, cols = 50) }}
+            {{ render_field(form.email, class_="form-control", rows=15, cols = 50) }}
+            {{ render_field(form.content, class_="form-control", size=50) }}
+            {{form.hidden_tag()}}
+            <tr class="submit">
+                <td></td>
+                <td>
+                    <button id="commentadd-submit" type="submit" class="btn btn-primary">Post comment</button>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div class="col-md-9 comment-text">
-    {{t.content}}
-    </div>
-    </li>
-  {% endfor %}
-  </ul>
-    {% endif %}
-    </div>
-  {% endif %}
-
-
-
-
-
-
-
-  <form action="" method="post" class="form-controls">
-    <div>
-    <table>
-        {{ render_field(form.name,class_="form-control", rows=15, cols = 50) }}
-        {{ render_field(form.email, class_="form-control", rows=15, cols = 50) }}
-        {{ render_field(form.content, class_="form-control", size=50) }}
-        {{form.hidden_tag()}}
-        <tr class="submit">
-            <td></td>
-            <td><button id="commentadd-submit" type="submit" class="btn btn-primary">Post comment</button></td>
-        </tr>
-    </table>
-    </div>
-  </form>
+</form>

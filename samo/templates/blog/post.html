@@ -26,8 +26,10 @@
     {% else %} No tags.
     {% endif %}
 	</span>
+    •
 	<span class="label">
-	<a href="{{url_for('blog.user',username=post.user.username)}}">posted by {{post.user.username}} {{ moment(post.date).fromNow() }}</a> <a href="#">•</a> <a href="{{ url_for('blog.detail', slug=post.slug) }}#comments">{{post.comments|length}} comment(s)</a>
+	<a href="{{url_for('blog.user',username=post.user.username)}}">posted by {{post.user.username}} {{ moment(post.date).fromNow() }}</a> •  <a
+            href="{{ url_for('blog.detail', slug=post.slug) }}#comments">{{post.comments|length}} comment(s)</a>
 </span>
 </section>
 <hr>
