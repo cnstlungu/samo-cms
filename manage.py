@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
+
+from flask_migrate import Migrate, MigrateCommand
+from flask_script import Manager, prompt_bool
+
 from samo.core import APP, DB
 from samo.models import User, Post, Tag, Comment
-from flask_script import Manager, prompt_bool
-from flask_migrate import Migrate, MigrateCommand
-import os
 from testing import DUMMY_CONTENT
 
 manager = Manager(APP)
@@ -63,6 +65,27 @@ def dropdb():
     if prompt_bool("Are you sure you want drop the entire database ?"):
         DB.drop_all()
         print('Dropped the database')
+
+
+@manager.command
+def run_test_suite():
+    """
+
+    Runs a testsuite to verify app functionality.
+
+    """
+
+    DB.drop_all()
+    print('Dropped the database')
+    DB.create_all()
+    print('Created all tables successfully.')
+
+    from subprocess import call
+    cur_dir = os.getcwd()
+    call(["python", "-m", "unittest", f"{cur_dir}/testing/test.py"])
+
+
+
 
 
 if __name__ == '__main__':

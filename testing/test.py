@@ -1,6 +1,8 @@
-from splinter import Browser
 import os
 import unittest
+
+from splinter import Browser
+
 from samo.core import DB
 from samo.models import User, Post, Comment
 
@@ -18,6 +20,7 @@ class TestSignup(unittest.TestCase):
             url = f'{SERVER}:{PORT}/auth/signup'
             browser.visit(url)
             browser.fill('username', 'test')
+            browser.fill('display_name', 'test')
             browser.fill('email', 'test@test.te')
             browser.fill('password', 'test')
             browser.fill('password2', 'test')
