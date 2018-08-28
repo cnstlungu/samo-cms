@@ -32,7 +32,7 @@ def populate():
         tag = Tag(name=i['lang_name'])
         DB.session.add(tag)
 
-        post = Post(content=i['content'], title=i['title'], user=userone, tags=[tag], publish=True)
+        post = Post(content=i['content'] * 3, title=i['title'], user=userone, tags=[tag], publish=True)
         DB.session.add(post)
 
         comment = Comment(name=i['name'], content=i['comm_content'], email='test'+str(x+1)+'@test.com', post_id=x + 1)

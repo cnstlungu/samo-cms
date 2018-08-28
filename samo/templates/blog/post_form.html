@@ -37,7 +37,7 @@
 <script>
 $(document).ready(function(){
     var tags = {{ all_tags()|map(attribute='name')|list|tojson|safe }};
-   $('#tags').select2({tags: tags, tokenSeparators: [",", " "]});
+   $('#tags').select2({tags: tags, width: 'resolve', tokenSeparators: [",", " "]});
    });
 </script>
 {% endblock %}

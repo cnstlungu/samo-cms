@@ -9,10 +9,17 @@
 </section>
 
 <section class="post-content">
-  {% if short == True %}  
-    {{post.content|truncate(1000,end=' ...')|safe}}  
+    {% if short == True %}
+    {{post.content|truncate(trunc_limit,end=' ...')|safe}}
+
+    {% if post.content|length > trunc_limit %}
+
     <a href ="{{ url_for('blog.detail', slug=post.slug) }}">continue reading</a>
-  {% else %} 
+
+    {% endif %}
+
+
+    {% else %}
     {{post.content|safe}}
   {% endif %}
 </section>

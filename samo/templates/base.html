@@ -67,7 +67,7 @@
 
 
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <article class="flashes">
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -85,7 +85,7 @@
     <div class="row">
 
 
-        <div class="col-md-9">
+        <div class="col-md-8">
             {% block content %}
             {% endblock %}
         </div>
@@ -96,35 +96,31 @@
 
         {% block sidebar %}
 
-        <div class="col-md-2 sidebar">
-            <div>
-                <h4>Tags</h4>
-                {% for t in all_tags() %}
-                <ul>
-                    <li>
-                        <a href="{{ url_for('blog.tag', name=t) }}">{{ t }}</a>
-                    </li>
-                </ul>
-                {% endfor %}
-            </div>
-            <br>
-            <div>
-                <h4>Follow me</h4>
-                <div>
-                    <ul>
-                        <li><a href="#"><i class="fa fa-github" style="font-size:48px;color:gray"
-                                           aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-linkedin-square" style="font-size:48px;color:gray"
-                                           aria-hidden="true"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter" style="font-size:48px;color:gray"
-                                           aria-hidden="true"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endblock %}
+        <div class="col-md-3 sidebar">
+            {% for t in tag_stats %}
 
+            <ul class="list-group">
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('blog.tag', name=t[0]) }}">{{ t[0] }}</a>
+                    <span class="badge badge-primary badge-pill">{{t [1] }}</span>
+                </li>
+                {% endfor %}
+                <li class="list-group-item d-flex justify-content-between align-items-center"><a href="#"><i
+                        class="fa fa-github" style="font-size:48px;color:gray"
+                        aria-hidden="true"></i></a></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center"><a href="#"><i
+                        class="fa fa-linkedin-square" style="font-size:48px;color:gray"
+                        aria-hidden="true"></i></a></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center"><a href="#"><i
+                        class="fa fa-twitter" style="font-size:48px;color:gray"
+                        aria-hidden="true"></i></a></li>
+            </ul>
+        </div>
     </div>
+    {% endblock %}
+
+</div>
 
 </div>
 <div>

@@ -5,7 +5,8 @@ Handles views to be served by the app.
 """
 from flask import render_template
 from sqlalchemy import desc
-from samo.core import APP, LOGIN_MANAGER
+
+from samo.core import APP, LOGIN_MANAGER, DB
 from samo.models import User, Post, Tag
 
 
@@ -31,6 +32,7 @@ def index(page):
     """
 
     posts = Post.query.filter(Post.publish).order_by(desc(Post.date)).paginate(page, 3)
+
     return render_template('index.html', posts=posts)
 
 
@@ -82,4 +84,6 @@ def inject_tags():
     :return: void
     """
 
-    return dict(all_tags=Tag.all)
+    return dict(all_tags=Tag.all, tag_stats=list(
+        DB.session.query(Tag.name, DB.func.count(Post.id)).outerjoin(Post, Tag.posts).group_by(Tag.name).order_by(
+            DB.func.count(Post.id).desc()).all()))
