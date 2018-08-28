@@ -17,7 +17,7 @@ The application has basic blogging functionality, including
 See requirements file.
 
 ### Other
-* Bootstrap
+* Bootstrap 4
 * [select2 library](https://select2.github.io/)
 
 
