@@ -7,6 +7,7 @@ import re
 from datetime import datetime
 
 from flask_login import UserMixin
+from flask_security import RoleMixin
 from sqlalchemy import desc
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy_utils import observes
@@ -17,7 +18,6 @@ from samo.core import DB
 TAGS = DB.Table('post_tag',
                 DB.Column('tag_id', DB.Integer, DB.ForeignKey('tag.id')),
                 DB.Column('post_id', DB.Integer, DB.ForeignKey('post.id')))
-
 
 class Post(DB.Model):
     """
@@ -30,7 +30,7 @@ class Post(DB.Model):
     content = DB.Column(DB.UnicodeText())
     user_id = DB.Column(DB.Integer, DB.ForeignKey('user.id'))
     tags = DB.relationship('Tag', secondary=TAGS, backref='posts')
-    comments = DB.relationship('Comment', backref='posts')
+    comments = DB.relationship('Comment', backref='posts', cascade="all, delete-orphan")
     publish = DB.Column(DB.Boolean)
 
     @observes('title')
@@ -115,7 +115,7 @@ class Comment(DB.Model):
     date = DB.Column(DB.DateTime, default=datetime.utcnow, nullable=False)
     email = DB.Column(DB.String(120))
     content = DB.Column(DB.UnicodeText())
-    post_id = DB.Column(DB.Integer, DB.ForeignKey('post.id'), nullable=True)
+    post_id = DB.Column(DB.Integer, DB.ForeignKey('post.id'), nullable=False)
 
     @staticmethod
     def all():
@@ -126,11 +126,15 @@ class Comment(DB.Model):
         return Comment.query.all()
 
     def __str__(self):
-        return self.content
+        return self.name + ' : ' + self.content
 
     def __repr__(self):
-        return self.content
+        return self.name + ' : ' + self.content
 
+
+roles_users = DB.Table('roles_users',
+                       DB.Column('user_id', DB.Integer(), DB.ForeignKey('user.id')),
+                       DB.Column('role_id', DB.Integer(), DB.ForeignKey('role.id')))
 
 class User(DB.Model, UserMixin):
     """
@@ -142,6 +146,8 @@ class User(DB.Model, UserMixin):
     email = DB.Column(DB.String(120), unique=True)
     posts = DB.relationship('Post', backref='user', lazy='dynamic')
     password_hash = DB.Column(DB.String(120))
+    roles = DB.relationship('Role', secondary=roles_users,
+                            backref=DB.backref('users', lazy='dynamic'))
 
     @property
     def password(self):
@@ -179,3 +185,15 @@ class User(DB.Model, UserMixin):
 
     def __repr__(self):
         return "<User '{}'>".format(self.username)
+
+
+class Role(DB.Model, RoleMixin):
+    id = DB.Column(DB.Integer(), primary_key=True)
+    name = DB.Column(DB.String(80), unique=True)
+    description = DB.Column(DB.String(255))
+
+    def __repr__(self):
+        return "<Role '{}'>".format(self.name)
+
+    def __str__(self):
+        return self.name

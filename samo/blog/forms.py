@@ -47,3 +47,10 @@ class CommentForm(Form):
         if not Form.validate(self):
             return False
         return True
+
+
+class SearchForm(Form):
+    """
+    Defines a search form
+    """
+    search = StringField('')

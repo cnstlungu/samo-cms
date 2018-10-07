@@ -37,6 +37,14 @@
 	<span class="label">
 	<a href="{{url_for('blog.user',username=post.user.username)}}">posted by {{post.user.username}} {{ moment(post.date).fromNow() }}</a> •  <a
             href="{{ url_for('blog.detail', slug=post.slug) }}#comments">{{post.comments|length}} comment(s)</a>
+
+        {% if current_user.is_authenticated %}
+                {% if current_user == post.user or 'Admin' in current_user.roles %}
+    • <a href="{{ url_for('blog.edit_post', post_id=post.id) }}">edit</a>
+    • <a href="{{ url_for('blog.delete_post', post_id=post.id) }}">delete</a>
+    {% endif %}
+
+                {% endif %}
 </span>
 </section>
 <hr>

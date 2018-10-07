@@ -3,9 +3,10 @@
 Handles views to be served by the app.
 
 """
-from flask import render_template
+from flask import render_template, request
 from sqlalchemy import desc
 
+from samo.blog.forms import SearchForm
 from samo.core import APP, LOGIN_MANAGER, DB
 from samo.models import User, Post, Tag
 
@@ -22,7 +23,7 @@ def load_user(user_id):
 
 @APP.route('/index', defaults={'page': 1})
 @APP.route("/page/<int:page>/", methods=["GET", "POST"])
-@APP.route('/', defaults={'page': 1})
+@APP.route('/', methods=["GET", "POST"], defaults={'page': 1})
 def index(page):
     """
     Displays a given page or the index (first) page.
@@ -33,8 +34,18 @@ def index(page):
 
     posts = Post.query.filter(Post.publish).order_by(desc(Post.date)).paginate(page, 3)
 
-    return render_template('index.html', posts=posts)
+    search = SearchForm(request.form)
 
+    if request.method == 'POST':
+
+        term = search.data['search']
+
+        results = Post.query.filter(Post.content.like(f'%{term}%')).order_by(desc(Post.date))
+
+        return render_template('results.html', posts=results, postsearchform=search)
+
+    else:
+        return render_template('index.html', posts=posts, postsearchform=search)
 
 @APP.route('/about')
 def about():
@@ -43,7 +54,10 @@ def about():
 
     :return: html template
     """
-    return render_template('about.html')
+
+    search = SearchForm(request.form)
+
+    return render_template('about.html', postsearchform=search)
 
 
 @APP.errorhandler(403)
@@ -85,5 +99,6 @@ def inject_tags():
     """
 
     return dict(all_tags=Tag.all, tag_stats=list(
-        DB.session.query(Tag.name, DB.func.count(Post.id)).outerjoin(Post, Tag.posts).group_by(Tag.name).order_by(
+        DB.session.query(Tag.name, DB.func.count(Post.id)).outerjoin(Post, Tag.posts).group_by(Tag.name).having(
+            DB.func.count(Post.id) > 0).order_by(
             DB.func.count(Post.id).desc()).all()))

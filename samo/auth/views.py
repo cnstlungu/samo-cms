@@ -22,12 +22,13 @@ def login():
         user = User.get_by_username(form.username.data)
         if user is not None and user.check_password(form.password.data):
             login_user(user, form.remember_me.data)
-            flash("Logged in successfully as {}.".format(user.username))
+            flash("Logged in successfully as {}.".format(user.username), category='success')
             return redirect(request.args.get('next') or url_for('blog.user',
                                                                 username=user.username))
-        flash('Incorrect username or password.')
+        flash('Incorrect username or password.', category='danger')
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+
     return render_template("auth/login.html", form=form)
 
 
@@ -54,6 +55,6 @@ def signup():
                     password=form.password.data)
         DB.session.add(user)
         DB.session.commit()
-        flash('Welcome, {}! Please login.'.format(user.username))
+        flash('Welcome, {}! Please login.'.format(user.username), category='success')
         return redirect(url_for('auth.login'))
     return render_template("auth/signup.html", form=form)

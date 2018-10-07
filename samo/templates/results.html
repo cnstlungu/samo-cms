@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h1>Results</h1>
+
+
+{% with posts = posts, short= True, trunc_limit = 1000, paginated = False %}
+
+{% include "blog/post_list.html" %}
+
+{% endwith %}
+
+{% endblock %}

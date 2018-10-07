@@ -54,11 +54,20 @@
                 {% endif %}
                 <li class="nav-item"><a href="{{ url_for('about') }}" class="nav-link">About</a></li>
             </ul>
-            <!--            <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>-->
+
+
         </div>
+
+
+        {% block search %}
+
+        {% from "form_macros.html" import render_field %}
+        <form method=post action="{{ url_for('index') }}" class="form-inline my-2 my-lg-0">
+            {{ render_field(postsearchform.search,class_="form-control mr-sm-2") }}
+            {{ postsearchform.hidden_tag() }}
+            <input type=submit value=Search class="btn btn-outline-success my-2 my-sm-0">
+        </form>
+        {% endblock %}
     </nav>
     <br>
 </header>
@@ -69,10 +78,13 @@
     <div class="row">
         <div class="col-md-8">
             <article class="flashes">
-                {% with messages = get_flashed_messages() %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                 {% for message in messages %}
-                <p class="alert alert-success ">{{ message }}</p>
+
+                <p class="{{'alert alert-info' if message[0]=='message' else 'alert alert-'+message[0]}}">{{ message[1]
+                    }}</p>
+
                 {% endfor %}
                 {% endif %}
                 {% endwith %}
