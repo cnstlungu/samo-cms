@@ -8,5 +8,3 @@ app.log
 alembic/
 alembic.ini
 .log
-setup/
-.sh
