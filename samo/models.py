@@ -7,7 +7,6 @@ import re
 from datetime import datetime
 
 from flask_login import UserMixin
-from flask_security import RoleMixin
 from sqlalchemy import desc
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy_utils import observes
@@ -187,7 +186,7 @@ class User(DB.Model, UserMixin):
         return "<User '{}'>".format(self.username)
 
 
-class Role(DB.Model, RoleMixin):
+class Role(DB.Model):
     id = DB.Column(DB.Integer(), primary_key=True)
     name = DB.Column(DB.String(80), unique=True)
     description = DB.Column(DB.String(255))
@@ -197,3 +196,7 @@ class Role(DB.Model, RoleMixin):
 
     def __str__(self):
         return self.name
+
+    def __eq__(self, other):
+        return (self.name == other or
+                self.name == getattr(other, 'name', None))

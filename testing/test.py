@@ -131,10 +131,9 @@ class TestComments(unittest.TestCase):
             self.assertTrue(browser.is_text_present("DummyPerson01"))
 
     def tearDown(self):
+        DB.session.query(Comment).filter_by(name='DummyPerson01').delete()
         DB.session.delete(self.post)
         DB.session.delete(self.user)
-        comment = DB.session.query(Comment).filter_by(name='DummyPerson01').first()
-        DB.session.delete(comment)
         DB.session.commit()
 
 
