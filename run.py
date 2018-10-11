@@ -1,10 +1,7 @@
-from samo.core import APP as app
 from flask_wtf.csrf import CSRFProtect
-from samo.config import config
-import logging
-import os
 
-logging.basicConfig(filename=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'app.log'), level=logging.DEBUG)
+from samo.config import config
+from samo.core import APP as app
 
 csrf = CSRFProtect()
 
