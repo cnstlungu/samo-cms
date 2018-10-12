@@ -3,8 +3,8 @@
 This module defines the parameters and objects for the Deployment Environments.
 """
 
-import os
 import configparser
+import os
 
 config = configparser.ConfigParser()
 config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini'))
@@ -19,6 +19,9 @@ class Config:
     SECRET_KEY = os.urandom(24)
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    CELERY_BROKER_URL = config['QUEUE']['CELERY_BROKER_URL']
+    CELERY_RESULT_BACKEND = config['QUEUE']['CELERY_RESULT_BACKEND']
+    MAIL_SENDGRID_API_KEY = config['MAIL']['MAIL_SENDGRID_API_KEY']
 
 
 class DevelopmentConfig(Config):
