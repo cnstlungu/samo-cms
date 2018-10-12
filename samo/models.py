@@ -201,6 +201,9 @@ class Role(DB.Model):
         return (self.name == other or
                 self.name == getattr(other, 'name', None))
 
+    def __hash__(self):
+        return hash(self.name)
+
 
 class Log(DB.Model):
     __tablename__ = 'logs'

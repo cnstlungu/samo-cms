@@ -6,7 +6,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, prompt_bool
 
 from samo.core import APP, DB
-from samo.models import User, Post, Tag, Comment, Role, roles_users
+from samo.models import User, Post, Tag, Comment, Role
 from testing import DUMMY_CONTENT
 
 manager = Manager(APP)
@@ -27,9 +27,9 @@ def populate():
     DB.create_all()
 
     roleone = Role(name='Admin', description='root user')
-    roletwo = Role(name='Contributor', description='reqular user')
-    userone = User(username="admin", displayname="admin", email="admin@test.com", password="admin")
-    usertwo = User(username="user", displayname="user", email="user@test.com", password="user")
+    roletwo = Role(name='Contributor', description='regular user')
+    userone = User(username="admin", displayname="admin", email="admin@test.com", password="admin", roles=[roleone])
+    usertwo = User(username="user", displayname="user", emal="user@test.com", password="user", roles=[roletwo])
 
     DB.session.add(userone)
     DB.session.add(usertwo)
@@ -38,7 +38,7 @@ def populate():
 
     DB.session.commit()
 
-    DB.session.execute(roles_users.insert().values([(1, 1), (2, 2)]))
+    # DB.session.execute(roles_users.insert().values([(1, 1), (2, 2)]))
 
     for x, i in enumerate(DUMMY_CONTENT):
         tag = Tag(name=i['lang_name'])
