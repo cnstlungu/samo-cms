@@ -35,7 +35,7 @@
 	</span>
     •
 	<span class="label">
-	<a href="{{url_for('blog.user',username=post.user.username)}}">posted by {{post.user.username}} {{ moment(post.date).fromNow() }}</a> •  <a
+	<a href="{{url_for('blog.author',username=post.user.username)}}">posted by {{post.user.username}} {{ moment(post.date).fromNow() }}</a> •  <a
             href="{{ url_for('blog.detail', slug=post.slug) }}#comments">{{post.comments|length}} comment(s)</a>
 
         {% if current_user.is_authenticated %}

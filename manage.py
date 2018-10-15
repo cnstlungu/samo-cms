@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import os
 
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, prompt_bool
 
-from samo.core import APP, DB
+from samo.core import app, db
 from samo.models import User, Post, Tag, Comment, Role
 from testing import DUMMY_CONTENT
 
-manager = Manager(APP)
-migrate = Migrate(APP, DB)
+manager = Manager(app)
+migrate = Migrate(app, db)
 
 manager.add_command('migrations', MigrateCommand)
 
@@ -24,33 +25,32 @@ def populate():
 
     """
 
-    DB.create_all()
+    db.create_all()
 
     roleone = Role(name='Admin', description='root user')
     roletwo = Role(name='Contributor', description='regular user')
-    userone = User(username="admin", displayname="admin", email="admin@test.com", password="admin", roles=[roleone])
-    usertwo = User(username="user", displayname="user", emal="user@test.com", password="user", roles=[roletwo])
+    userone = User(username="admin", displayname="admin", email="admin@test.com", password="admin", roles=[roleone],
+                   confirmed=True, confirmed_on=datetime.datetime.utcnow())
+    usertwo = User(username="user", displayname="user", email="user@test.com", password="user", roles=[roletwo])
 
-    DB.session.add(userone)
-    DB.session.add(usertwo)
-    DB.session.add(roleone)
-    DB.session.add(roletwo)
+    db.session.add(userone)
+    db.session.add(usertwo)
+    db.session.add(roleone)
+    db.session.add(roletwo)
 
-    DB.session.commit()
-
-    # DB.session.execute(roles_users.insert().values([(1, 1), (2, 2)]))
+    db.session.commit()
 
     for x, i in enumerate(DUMMY_CONTENT):
         tag = Tag(name=i['lang_name'])
-        DB.session.add(tag)
+        db.session.add(tag)
 
         post = Post(content=i['content'] * 3, title=i['title'], user=usertwo, tags=[tag], publish=True)
-        DB.session.add(post)
+        db.session.add(post)
 
         comment = Comment(name=i['name'], content=i['comm_content'], email='test'+str(x+1)+'@test.com', post_id=x + 1)
-        DB.session.add(comment)
+        db.session.add(comment)
 
-    DB.session.commit()
+    db.session.commit()
 
     print('Populated the database with test data.')
 
@@ -62,7 +62,7 @@ def initdb():
 
     """
 
-    DB.create_all()
+    db.create_all()
     print('Created all tables successfully.')
 
 
@@ -75,7 +75,7 @@ def dropdb():
     """
 
     if prompt_bool("Are you sure you want drop the entire database ?"):
-        DB.drop_all()
+        db.drop_all()
         print('Dropped the database')
 
 
@@ -87,9 +87,9 @@ def run_test_suite():
 
     """
 
-    DB.drop_all()
+    db.drop_all()
     print('Dropped the database')
-    DB.create_all()
+    db.create_all()
     print('Created all tables successfully.')
 
     from subprocess import call

@@ -4,9 +4,7 @@ This module contains the definitions of the forms used by the blog blueprint.
 """
 from flask_wtf import FlaskForm as Form
 from wtforms.fields import StringField, TextAreaField
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import Regexp, DataRequired, Email
-
+from wtforms.validators import Regexp, DataRequired
 
 class PostForm(Form):
     """
@@ -38,9 +36,6 @@ class CommentForm(Form):
     """
     Defines a comment form.
     """
-    name = StringField('Name', validators=[DataRequired("Please enter your name.")])
-    email = EmailField('Email', validators=[DataRequired("Your e-mail adress is required to add a comment."),
-                                            Email("Please enter a valid e-mail address.")])
     content = TextAreaField('Comment', validators=[DataRequired("Please enter your comment.")])
 
     def validate(self):

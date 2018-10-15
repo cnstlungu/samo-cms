@@ -1,9 +1,20 @@
 [ENV]
-SAMO_ENV=your_environment_name
-HOST=your_host_here
+SAMO_ENV=test
+HOST=0.0.0.0
 
 [DB]
-SAMO_SERVER=your_server
-SAMO_DB=your_db
-SAMO_USER=your_user
-SAMO_PASS=your_password
+SAMO_SERVER=127.0.0.1
+SAMO_DB=exampledatabase
+SAMO_USER=user
+SAMO_PASS=password
+
+[MAIL]
+MAIL_SENDGRID_API_KEY=MY_API_KEY
+MAIL_DEFAULT_SENDER=myemail@domain.com
+
+[QUEUE]
+CELERY_BROKER_URL=redis://localhost:6379
+CELERY_RESULT_BACKEND=redis://localhost:6379
+
+[SECURITY]
+SECURITY_PASSWORD_SALT=change_me

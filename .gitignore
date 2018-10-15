@@ -4,7 +4,4 @@ config.ini
 __pycache__/
 venv/
 *.db
-app.log
-alembic/
-alembic.ini
 .log

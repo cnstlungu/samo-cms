@@ -7,11 +7,11 @@ from flask import render_template, request
 from sqlalchemy import desc
 
 from samo.blog.forms import SearchForm
-from samo.core import APP, LOGIN_MANAGER, DB
+from samo.core import app, login_manager, db
 from samo.models import User, Post, Tag
 
 
-@LOGIN_MANAGER.user_loader
+@login_manager.user_loader
 def load_user(user_id):
     """
     Gets user given a certain user_id
@@ -21,9 +21,9 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@APP.route('/index', defaults={'page': 1})
-@APP.route("/page/<int:page>/", methods=["GET", "POST"])
-@APP.route('/', methods=["GET", "POST"], defaults={'page': 1})
+@app.route('/index', defaults={'page': 1})
+@app.route("/page/<int:page>/", methods=["GET", "POST"])
+@app.route('/', methods=["GET", "POST"], defaults={'page': 1})
 def index(page):
     """
     Displays a given page or the index (first) page.
@@ -44,10 +44,10 @@ def index(page):
 
         return render_template('results.html', posts=results, postsearchform=search)
 
-    else:
-        return render_template('index.html', posts=posts, postsearchform=search)
+    return render_template('index.html', posts=posts, postsearchform=search)
 
-@APP.route('/about')
+
+@app.route('/about')
 def about():
     """
     Renders the about page.
@@ -60,7 +60,7 @@ def about():
     return render_template('about.html', postsearchform=search)
 
 
-@APP.errorhandler(403)
+@app.errorhandler(403)
 def forbidden(error):
     """
     Renders 403 error.
@@ -70,7 +70,7 @@ def forbidden(error):
     return render_template('403.html'), 403
 
 
-@APP.errorhandler(404)
+@app.errorhandler(404)
 def page_not_found(error):
     """
     Renders 404 error.
@@ -80,7 +80,7 @@ def page_not_found(error):
     return render_template('404.html'), 404
 
 
-@APP.errorhandler(500)
+@app.errorhandler(500)
 def internal_server_error(error):
     """
     Renders 500 error.
@@ -90,7 +90,7 @@ def internal_server_error(error):
     return render_template('500.html'), 500
 
 
-@APP.context_processor
+@app.context_processor
 def inject_tags():
     """
     Makes all the tags available in JS.
@@ -99,6 +99,6 @@ def inject_tags():
     """
 
     return dict(all_tags=Tag.all, tag_stats=list(
-        DB.session.query(Tag.name, DB.func.count(Post.id)).outerjoin(Post, Tag.posts).group_by(Tag.name).having(
-            DB.func.count(Post.id) > 0).order_by(
-            DB.func.count(Post.id).desc()).all()))
+        db.session.query(Tag.name, db.func.count(Post.id)).outerjoin(Post, Tag.posts). \
+            group_by(Tag.name).having(db.func.count(Post.id) > 0). \
+            order_by(db.func.count(Post.id).desc()).all()))

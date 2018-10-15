@@ -7,30 +7,31 @@ import re
 from datetime import datetime
 
 from flask_login import UserMixin
-from sqlalchemy import desc
+from sqlalchemy import desc, event
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy_utils import observes
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from samo.core import DB
+from samo.core import db
 
-TAGS = DB.Table('post_tag',
-                DB.Column('tag_id', DB.Integer, DB.ForeignKey('tag.id')),
-                DB.Column('post_id', DB.Integer, DB.ForeignKey('post.id')))
+TAGS = db.Table('post_tag',
+                db.Column('tag_id', db.Integer, db.ForeignKey('tag.id')),
+                db.Column('post_id', db.Integer, db.ForeignKey('post.id')))
 
-class Post(DB.Model):
+
+class Post(db.Model):
     """
     Defines the Post object.
     """
-    id = DB.Column(DB.Integer, primary_key=True)
-    date = DB.Column(DB.DateTime, default=datetime.utcnow)
-    title = DB.Column(DB.UnicodeText(140))
-    slug = DB.Column(DB.UnicodeText(200))
-    content = DB.Column(DB.UnicodeText())
-    user_id = DB.Column(DB.Integer, DB.ForeignKey('user.id'))
-    tags = DB.relationship('Tag', secondary=TAGS, backref='posts')
-    comments = DB.relationship('Comment', backref='posts', cascade="all, delete-orphan")
-    publish = DB.Column(DB.Boolean)
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    title = db.Column(db.UnicodeText(140))
+    slug = db.Column(db.UnicodeText(200))
+    content = db.Column(db.UnicodeText())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    tags = db.relationship('Tag', secondary=TAGS, backref='posts')
+    comments = db.relationship('Comment', backref='posts', cascade="all, delete-orphan")
+    publish = db.Column(db.Boolean)
 
     @observes('title')
     def compute_slug(self, title):
@@ -71,12 +72,12 @@ class Post(DB.Model):
         return "<Post '{}': '{}'>".format(self.title, self.date)
 
 
-class Tag(DB.Model):
+class Tag(db.Model):
     """
     Defines the Tag object.
     """
-    id = DB.Column(DB.Integer, primary_key=True)
-    name = DB.Column(DB.String(25), nullable=False, unique=True, index=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(25), nullable=False, unique=True, index=True)
 
     @staticmethod
     def get_or_create(name):
@@ -105,16 +106,16 @@ class Tag(DB.Model):
         return self.name
 
 
-class Comment(DB.Model):
+class Comment(db.Model):
     """
     Defines the Comment object.
     """
-    id = DB.Column(DB.Integer, primary_key=True)
-    name = DB.Column(DB.String(120))
-    date = DB.Column(DB.DateTime, default=datetime.utcnow, nullable=False)
-    email = DB.Column(DB.String(120))
-    content = DB.Column(DB.UnicodeText())
-    post_id = DB.Column(DB.Integer, DB.ForeignKey('post.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    content = db.Column(db.UnicodeText())
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    hidden = db.Column(db.Boolean, default=False)
 
     @staticmethod
     def all():
@@ -131,22 +132,26 @@ class Comment(DB.Model):
         return self.name + ' : ' + self.content
 
 
-roles_users = DB.Table('roles_users',
-                       DB.Column('user_id', DB.Integer(), DB.ForeignKey('user.id')),
-                       DB.Column('role_id', DB.Integer(), DB.ForeignKey('role.id')))
+roles_users = db.Table('roles_users',
+                       db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))  # pylint: disable=invalid-name
 
-class User(DB.Model, UserMixin):
+
+class User(db.Model, UserMixin):
     """
     Defines the User object.
     """
-    id = DB.Column(DB.Integer, primary_key=True)
-    username = DB.Column(DB.String(80), unique=True)
-    displayname = DB.Column(DB.String(120), unique=True)
-    email = DB.Column(DB.String(120), unique=True)
-    posts = DB.relationship('Post', backref='user', lazy='dynamic')
-    password_hash = DB.Column(DB.String(120))
-    roles = DB.relationship('Role', secondary=roles_users,
-                            backref=DB.backref('users', lazy='dynamic'))
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    displayname = db.Column(db.String(120), unique=True)
+    email = db.Column(db.String(120), unique=True)
+    posts = db.relationship('Post', backref='user', lazy='dynamic')
+    comments = db.relationship('Comment', backref='comment_user', lazy='dynamic')
+    password_hash = db.Column(db.String(120))
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    confirmed_on = db.Column(db.DateTime, nullable=True)
 
     @property
     def password(self):
@@ -186,10 +191,10 @@ class User(DB.Model, UserMixin):
         return "<User '{}'>".format(self.username)
 
 
-class Role(DB.Model):
-    id = DB.Column(DB.Integer(), primary_key=True)
-    name = DB.Column(DB.String(80), unique=True)
-    description = DB.Column(DB.String(255))
+class Role(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
 
     def __repr__(self):
         return "<Role '{}'>".format(self.name)
@@ -205,14 +210,14 @@ class Role(DB.Model):
         return hash(self.name)
 
 
-class Log(DB.Model):
+class Log(db.Model):
     __tablename__ = 'logs'
-    id = DB.Column(DB.Integer, primary_key=True)  # auto incrementing
-    logger = DB.Column(DB.String(100))  # the name of the logger. (e.g. myapp.views)
-    level = DB.Column(DB.String(100))  # info, debug, or error?
-    trace = DB.Column(DB.String(4096))  # the full traceback printout
-    msg = DB.Column(DB.String(4096))  # any custom log you may have included
-    created_at = DB.Column(DB.DateTime, default=DB.func.now())  # the current timestamp
+    id = db.Column(db.Integer, primary_key=True)  # auto incrementing
+    logger = db.Column(db.String(100))  # the name of the logger. (e.g. myapp.views)
+    level = db.Column(db.String(100))  # info, debug, or error?
+    trace = db.Text(db.String(4096))  # the full traceback printout
+    msg = db.Column(db.String(4096))  # any custom log you may have included
+    created_at = db.Column(db.DateTime, default=db.func.now())  # the current timestamp
 
     def __init__(self, logger=None, level=None, trace=None, msg=None):
         self.logger = logger
@@ -225,3 +230,16 @@ class Log(DB.Model):
 
     def __repr__(self):
         return "<Log: %s - %s>" % (self.created_at.strftime('%m/%d/%Y-%H:%M:%S'), self.msg[:50])
+
+
+@event.listens_for(Role.__table__, 'after_create')
+def insert_initial_values(*args, **kwargs):  # pylint: disable=unused-argument
+    db.session.add(Role(name='Admin', description='admin'))
+    db.session.add(Role(name='Contributor', description='contributor'))
+    db.session.add(Role(name='User', description='regular user'))
+    db.session.commit()
+
+
+@db.event.listens_for(Role, "after_insert")
+def get_default_role(*args, **kwargs):  # pylint: disable=unused-argument
+    return Role.query.filter(Role.name == 'User').first_or_404()

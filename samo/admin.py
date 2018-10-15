@@ -11,8 +11,16 @@ from flask_admin.base import MenuLink
 from flask_admin.contrib import sqla
 from flask_login import current_user
 
-from samo.core import APP, DB
+from samo.core import app, db
+from samo.decorators import role_required
 from samo.models import User, Post, Tag, Comment, Role
+
+
+def is_admin(user):
+    if user.is_authenticated:
+        return 'Admin' in user.roles
+    return False
+
 
 
 class CustomAdminIndexView(AdminIndexView):
@@ -20,14 +28,16 @@ class CustomAdminIndexView(AdminIndexView):
     Creates the Custom admin Index View
     """
 
+
     @expose('/')
+    @role_required(roles=['Admin'])
     def index(self):
         if not current_user.is_authenticated:
             return redirect(url_for('auth.login'))
         return super(CustomAdminIndexView, self).index()
 
 
-ADMIN = Admin(APP, index_view=CustomAdminIndexView(), template_mode='bootstrap3')
+ADMIN = Admin(app, index_view=CustomAdminIndexView(), template_mode='bootstrap3')
 
 
 class PostAdmin(sqla.ModelView):
@@ -44,10 +54,10 @@ class PostAdmin(sqla.ModelView):
         Function to check if user has access to certain page
         :return: True if accessible, False if not
         """
-        return current_user.is_authenticated
+        return is_admin(current_user)
 
 
-ADMIN.add_view(PostAdmin(Post, DB.session, name='Posts'))
+ADMIN.add_view(PostAdmin(Post, db.session, name='Posts'))
 
 
 class TagAdmin(sqla.ModelView):
@@ -60,29 +70,29 @@ class TagAdmin(sqla.ModelView):
         Function to check if user has access to certain page
         :return: True if accessible, False if not
         """
-        return current_user.is_authenticated
+        return is_admin(current_user)
 
 
-ADMIN.add_view(TagAdmin(Tag, DB.session, name='Tags'))
+ADMIN.add_view(TagAdmin(Tag, db.session, name='Tags'))
 
 
 class CommentAdmin(sqla.ModelView):
     """
     Defines the Comment administration page
     """
-    column_list = ('name', 'email', 'date', 'content', 'posts')
-    form_columns = ('name', 'email', 'date', 'content', 'posts')
-    column_searchable_list = ('name', 'email', 'content')
+    column_list = ('comment_user', 'date', 'content', 'posts')
+    form_columns = ('comment_user', 'date', 'content', 'posts')
+    columns_searchable = ('content')
 
     def is_accessible(self):
         """
         Function to check if user has access to certain page
         :return: True if accessible, False if not
         """
-        return current_user.is_authenticated
+        return is_admin(current_user)
 
 
-ADMIN.add_view(CommentAdmin(Comment, DB.session, name='Comments'))
+ADMIN.add_view(CommentAdmin(Comment, db.session, name='Comments'))
 
 
 class UserAdmin(sqla.ModelView):
@@ -95,14 +105,14 @@ class UserAdmin(sqla.ModelView):
         Function to check if user has access to certain page
         :return: True if accessible, False if not
         """
-        return current_user.is_authenticated
+        return is_admin(current_user)
 
     column_labels = dict(displayname='Display Name', )
-    form_excluded_columns = ('posts',)
+    form_excluded_columns = ('posts', 'comments')
     column_searchable_list = ('username', 'email', 'displayname')
 
 
-ADMIN.add_view(UserAdmin(User, DB.session, name='Users'))
+ADMIN.add_view(UserAdmin(User, db.session, name='Users'))
 
 
 class RoleAdmin(sqla.ModelView):
@@ -115,13 +125,13 @@ class RoleAdmin(sqla.ModelView):
         Function to check if user has access to certain page
         :return: True if accessible, False if not
         """
-        return current_user.is_authenticated
+        return is_admin(current_user)
 
     column_labels = dict(name='Name', )
     form_excluded_columns = ('users',)
     column_searchable_list = ('name', 'description')
 
 
-ADMIN.add_view(RoleAdmin(Role, DB.session, name='Roles'))
+ADMIN.add_view(RoleAdmin(Role, db.session, name='Roles'))
 
 ADMIN.add_link(MenuLink(name='Back', url='/'))

@@ -6,7 +6,7 @@ This module defines the parameters and objects for the Deployment Environments.
 import configparser
 import os
 
-config = configparser.ConfigParser()
+config = configparser.ConfigParser()  # pylint: disable=invalid-name
 config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini'))
 
 ENVIRONMENT = config['ENV']['SAMO_ENV']
@@ -22,6 +22,8 @@ class Config:
     CELERY_BROKER_URL = config['QUEUE']['CELERY_BROKER_URL']
     CELERY_RESULT_BACKEND = config['QUEUE']['CELERY_RESULT_BACKEND']
     MAIL_SENDGRID_API_KEY = config['MAIL']['MAIL_SENDGRID_API_KEY']
+    MAIL_DEFAULT_SENDER = config['MAIL']['MAIL_DEFAULT_SENDER']
+    SECURITY_PASSWORD_SALT = config['SECURITY']['SECURITY_PASSWORD_SALT']
 
 
 class DevelopmentConfig(Config):
@@ -45,7 +47,8 @@ class TestingConfig(Config):
     _db = config['DB']['SAMO_DB']
     _user = config['DB']['SAMO_USER']
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(_user, _pass, _server, _db)
+    SQLALCHEMY_DATABASE_URI = 'mysql://{}:{}@{}/{}?charset=utf8mb4'. \
+        format(_user, _pass, _server, _db)
 
 
 class ProductionConfig(Config):

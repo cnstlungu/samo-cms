@@ -10,8 +10,8 @@ from samo import views
 from . import admin
 from .auth.core import AUTH
 from .blog.core import BLOG
-from .core import APP
+from .core import app
 
-MOMENT = Moment(APP)
-APP.register_blueprint(AUTH, url_prefix='/auth')
-APP.register_blueprint(BLOG, url_prefix='/blog')
+MOMENT = Moment(app)
+app.register_blueprint(AUTH, url_prefix='/auth')
+app.register_blueprint(BLOG, url_prefix='/blog')

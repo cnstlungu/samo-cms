@@ -1,7 +1,7 @@
 import logging
 import traceback
 
-from samo.core import DB
+from samo.core import db
 from samo.models import Log
 
 
@@ -17,20 +17,21 @@ class SQLAlchemyHandler(logging.Handler):
             level=record.__dict__['levelname'],
             trace=trace,
             msg=record.__dict__['msg'], )
-        DB.session.add(log)
-        DB.session.commit()
+        db.session.add(log)
+        db.session.commit()
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 logger.setLevel(logging.INFO)
 
-ch = SQLAlchemyHandler()
+ch = SQLAlchemyHandler()  # pylint: disable=invalid-name
 ch.setLevel(logging.INFO)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # pylint: disable=invalid-name
 ch.setFormatter(formatter)
 
-loggers = [logger, logging.getLogger('werkzeug'), logging.getLogger('sqlalchemy'), logging.getLogger('flask.app')]
+loggers = [logger, logging.getLogger('werkzeug'), logging.getLogger('sqlalchemy'), \
+           logging.getLogger('flask.app')]  # pylint: disable=invalid-name
 
 for l in loggers:
     l.addHandler(ch)

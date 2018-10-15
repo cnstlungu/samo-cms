@@ -10,10 +10,17 @@
         {% for t in post.comments %}
         <li class="list-group-item clearfix">
             <div class="col-md-3 avatar">
-                <b> {{t.name}} </b> · {{moment(t.date).fromNow()}}
+                <b> {{t.comment_user.displayname}} </b> · {{moment(t.date).fromNow()}}
             </div>
             <div class="col-md-9 comment-text">
+
+
+                {% if not t.hidden %}
                 {{t.content}}
+                {% else %}
+                <i>This comment has been hidden.</i>
+                {% endif %}
+
             </div>
         </li>
         {% endfor %}
@@ -26,12 +33,11 @@
 
 {% endif %}
 
+{% if current_user.is_authenticated %}
 
 <form action="" method="post" class="form-controls">
     <div>
         <table>
-            {{ render_field(form.name,class_="form-control", rows=15, cols = 50) }}
-            {{ render_field(form.email, class_="form-control", rows=15, cols = 50) }}
             {{ render_field(form.content, class_="form-control", size=50) }}
             {{form.hidden_tag()}}
             <tr class="submit">
@@ -43,3 +49,11 @@
         </table>
     </div>
 </form>
+
+
+{% else %}
+
+Please signup or login to comment on this topic.
+
+
+{% endif %}

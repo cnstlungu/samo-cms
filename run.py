@@ -1,5 +1,5 @@
 from samo.config import config
-from samo.core import APP as app
+from samo.core import app
 
 
 if __name__ == '__main__':

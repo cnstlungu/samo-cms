@@ -4,16 +4,17 @@ This sub-module controls the views to be served by the blog blueprint.
 """
 
 from flask import render_template, flash, redirect, url_for, request, abort
-from flask_login import login_required, current_user
+from flask_login import current_user
 
-from samo.core import DB
+from samo.core import db
+from samo.decorators import role_required
 from .core import BLOG
 from .forms import PostForm, CommentForm, SearchForm
 from ..models import User, Post, Tag, Comment
 
 
 @BLOG.route('/add', methods=['GET', 'POST'])
-@login_required
+@role_required(roles=['Admin', 'Contributor'])
 def add():
     """
     Renders a template for adding a post.
@@ -25,18 +26,21 @@ def add():
         ptags = form.ptags.data
         title = form.title.data
         _post = Post(user=current_user, content=content, title=title, ptags=ptags, publish=True)
-        DB.session.add(_post)
-        DB.session.commit()
+        db.session.add(_post)
+        db.session.commit()
         flash("Stored post '{}'".format(_post.title))
         return redirect(url_for('index'))
 
     search = SearchForm(request.form)
 
-    return render_template('blog/post_form.html', form=form, title="Add a post", postsearchform=search)
+    return render_template('blog/post_form.html', form=form, title="Add a post", \
+                           postsearchform=search)
+
+
 
 
 @BLOG.route('/edit/<int:post_id>', methods=['GET', 'POST'])
-@login_required
+@role_required(roles=['Admin', 'Contributor'])
 def edit_post(post_id):
     """
     Renders a template for editing an existing post, given its post id
@@ -51,17 +55,20 @@ def edit_post(post_id):
         post.title = form.title.data
         post.content = form.content.data
         post.ptags = form.ptags.data
-        DB.session.commit()
+        db.session.commit()
         flash("Edited post '{}'".format(post.title))
         return redirect(url_for('blog.user', username=current_user.username))
 
     search = SearchForm(request.form)
 
-    return render_template('blog/post_form.html', form=form, title="Edit post", postsearchform=search)
+    return render_template('blog/post_form.html', form=form, title="Edit post", \
+                           postsearchform=search)
+
+
 
 
 @BLOG.route('/delete/<int:post_id>', methods=['GET', 'POST'])
-@login_required
+@role_required(roles=['Admin', 'Contributor'])
 def delete_post(post_id):
     """
     Deletes a post, given its postid
@@ -72,17 +79,16 @@ def delete_post(post_id):
     if current_user != post.user and 'Admin' not in current_user.roles:
         abort(403)
     if request.method == "POST":
-        DB.session.delete(post)
-        DB.session.commit()
+        db.session.delete(post)
+        db.session.commit()
         flash("Deleted post '{}'".format(post.title))
-        return redirect(url_for('blog.user', username=current_user.username))
-    else:
-        flash("Please confirm deleting the post.", category='warning')
+        return redirect(url_for('blog.author', username=current_user.username))
+    flash("Please confirm deleting the post.", category='warning')
     return render_template('blog/confirm_delete.html', post=post, nolinks=True)
 
 
-@BLOG.route('/user/<username>')
-def user(username):
+@BLOG.route('/author/<username>')
+def author(username):
     """
     Returns a page with all the posts created by a given user.
     :param username: string, author to be filtered for
@@ -92,7 +98,7 @@ def user(username):
 
     search = SearchForm(request.form)
 
-    return render_template('blog/user.html', user=_user, postsearchform=search)
+    return render_template('blog/author.html', user=_user, postsearchform=search)
 
 
 @BLOG.route('/tag/<name>')
@@ -117,20 +123,24 @@ def detail(slug):
     :return: renders a template.
     """
     post = Post.query.filter_by(slug=slug).first_or_404()
-    form = CommentForm()
-
-    if form.validate_on_submit():
-        name = form.name.data
-        email = form.email.data
-        content = form.content.data
-        post_id = post.id
-        _comment = Comment(name=name, content=content, email=email, post_id=post_id)
-        DB.session.add(_comment)
-        DB.session.commit()
-        flash("Your comment was added.")
-        search = SearchForm(request.form)
-        return render_template('blog/detail.html', post=post, form=form, postsearchform=search)
 
     search = SearchForm(request.form)
 
-    return render_template('blog/detail.html', post=post, form=form, postsearchform=search)
+    if current_user.is_authenticated:
+
+        form = CommentForm()
+
+        if form.validate_on_submit():
+            content = form.content.data
+            post_id = post.id
+            user_id = current_user.id
+            _comment = Comment(content=content, post_id=post_id, user_id=user_id)
+            db.session.add(_comment)
+            db.session.commit()
+            flash("Your comment was added.")
+            search = SearchForm(request.form)
+            return render_template('blog/detail.html', post=post, form=form, postsearchform=search)
+
+        return render_template('blog/detail.html', post=post, form=form, postsearchform=search)
+
+    return render_template('blog/detail.html', post=post, postsearchform=search)
