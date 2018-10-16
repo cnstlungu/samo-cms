@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import datetime
 import os
 
@@ -7,58 +6,36 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager, prompt_bool
 
 from samo.core import app, db
-from samo.models import User, Post, Tag, Comment, Role
-from testing import DUMMY_CONTENT
+from samo.models import Role, User
 
 manager = Manager(app)
 migrate = Migrate(app, db)
 
 manager.add_command('migrations', MigrateCommand)
 
-os.environ["SAMO_ENV"] = "dev"
-
 
 @manager.command
-def populate():
+def create_admin():
     """
-    Populates the database with placeholder content for functional testing purposes.
+    Creates the admin user.
 
     """
-
-    db.create_all()
-
-    roleone = Role(name='Admin', description='root user')
-    roletwo = Role(name='Contributor', description='regular user')
-    userone = User(username="admin", displayname="admin", email="admin@test.com", password="admin", roles=[roleone],
-                   confirmed=True, confirmed_on=datetime.datetime.utcnow())
-    usertwo = User(username="user", displayname="user", email="user@test.com", password="user", roles=[roletwo])
-
-    db.session.add(userone)
-    db.session.add(usertwo)
-    db.session.add(roleone)
-    db.session.add(roletwo)
-
-    db.session.commit()
-
-    for x, i in enumerate(DUMMY_CONTENT):
-        tag = Tag(name=i['lang_name'])
-        db.session.add(tag)
-
-        post = Post(content=i['content'] * 3, title=i['title'], user=usertwo, tags=[tag], publish=True)
-        db.session.add(post)
-
-        comment = Comment(name=i['name'], content=i['comm_content'], email='test'+str(x+1)+'@test.com', post_id=x + 1)
-        db.session.add(comment)
-
-    db.session.commit()
-
-    print('Populated the database with test data.')
+    if not User.query.filter(User.username == 'admin').first():
+        admin_role = Role.query.filter(Role.name == 'Admin').first_or_404()
+        userone = User(username="admin", displayname="Admin", email="admin@example.com",
+                       password="admin", roles=[admin_role],
+                       confirmed=True, confirmed_on=datetime.datetime.utcnow())
+        db.session.add(userone)
+        db.session.commit()
+        print('Created the Admin user.')
+    else:
+        raise SystemError("Admin user already exists!")
 
 
 @manager.command
 def initdb():
     """
-    Initializez all tables as per existing model.
+    Initializes all tables as per existing models.
 
     """
 
