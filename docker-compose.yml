@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+    - /home/dev/db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${SAMO_DBPASS}"
+      MYSQL_DATABASE: SAMO
+  redis:
+    image: "redis:latest"
+  web:
+    build:
+      context: ./
+      dockerfile: ./docker/app/Dockerfile
+    command: /code/docker/boot.sh
+    environment:
+      FLASK_ENV: dockertesting
+
+    volumes:
+    - .:/code
+    ports:
+    - "8000:5000"
+    depends_on:
+    - db
+    links:
+    - redis
+  celery:
+    build:
+      context: ./
+      dockerfile: ./docker/celery-worker/Dockerfile
+    environment:
+      FLASK_ENV: dockertesting
+    volumes:
+    - .:/code
+    links:
+    - db
+    - redis
+volumes:
+  db-data:
+
+
