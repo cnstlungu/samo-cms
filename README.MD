@@ -12,7 +12,7 @@ The application provides blogging functionality, including:
 ## Requirements
 
 #### Backend
-For Python packages, please see the requirements.txt file.
+For Python packages, please see the [requirements.txt](requirements.txt) file.
 
 #### Database
 The development has been done with MySQL, but any database supported by [SQLAlchemy](https://docs.sqlalchemy.org/en/latest/core/engines.html)  should work with little or no adjustments.
@@ -36,9 +36,9 @@ I strongly recommend that you set up a python [virtual environment](https://docs
 
 3. Run the management commands as follows
 
-* `python manage.py initdb` this will initialize the database (create the database objects)
+`python manage.py initdb` this will initialize the database (create the database objects)
 
-* *optional*: `python manage.py populate` this will populate the database with play data, including an admin user (please see management section below).
+*optional* `python manage.py populate` this will populate the database with play data, including an admin user (please see management section below).
 
 4. Set an environment variable FLASK_ENV with the value of *development*
 
@@ -50,7 +50,7 @@ I strongly recommend that you set up a python [virtual environment](https://docs
 ## Management
 
 The samo-cms/manage.py file executes basic managing tasks, including:
-* initdb - initializes the databases (SQLite by default)
+* initdb - initializes the databases
 * create_admin - instantiates an admin user with the following credentials. Please remember to remove it as soon as the setup is complete. 
     * username="admin",
     * email="admin@example.com"
