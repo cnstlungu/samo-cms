@@ -57,7 +57,7 @@ def edit_post(post_id):
         post.ptags = form.ptags.data
         db.session.commit()
         flash("Edited post '{}'".format(post.title))
-        return redirect(url_for('blog.user', username=current_user.username))
+        return redirect(url_for('blog.author', username=current_user.username))
 
     search = SearchForm(request.form)
 

@@ -69,7 +69,7 @@ def signup():
         html = render_template('auth/activate.html', confirm_url=confirm_url)
         subject = "Please confirm your email"
 
-        send_email.delay(to=_user.email, subject=subject, template=html)
+        send_email.delay(recipients=_user.email, subject=subject, template=html)
 
         login_user(_user)
 
@@ -106,7 +106,7 @@ def resend_confirmation():
     confirm_url = url_for('auth.confirm_email', token=token, _external=True)
     html = render_template('auth/activate.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
-    send_email.delay(to=current_user.email, subject=subject, template=html)
+    send_email.delay(recipients=current_user.email, subject=subject, template=html)
     flash('A new confirmation email has been sent.', 'success')
     return redirect(url_for('auth.unconfirmed'))
 
