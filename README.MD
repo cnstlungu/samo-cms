@@ -2,9 +2,7 @@
 
 A simple CMS/blog in Flask
 
-Samo-CMS is a project inspired by Reindert-Jan Ekker's course ["Introduction to the Flask Microframework"](https://github.com/gonzigonz/Pluralsight---Python-Flask-Apps) on [Pluralsight](https://www.pluralsight.com/courses/flask-micro-framework-introduction) and the boilerplate project I've built while following his course.
-
-The application has basic blogging functionality, including
+The application provides blogging functionality, including:
 * Creating, editing and deleting blog posts
 * Commenting
 * Authenticating to the portal
@@ -13,10 +11,16 @@ The application has basic blogging functionality, including
 
 ## Requirements
 
-#### Python-related
-See requirements.txt file.
+#### Backend
+For Python packages, please see the requirements.txt file.
 
-#### Other
+#### Database
+The development has been done with MySQL, but any database supported by [SQLAlchemy](https://docs.sqlalchemy.org/en/latest/core/engines.html)  should work with little or no adjustments.
+
+#### Redis
+The application requires Redis as its task queue.
+
+#### Frontend
 * Bootstrap 4
 * [select2 library](https://select2.github.io/)
 
@@ -28,42 +32,44 @@ I strongly recommend that you set up a python [virtual environment](https://docs
 
 `pip install -r requirements.txt`
 
-2. Create a config.ini file - use config.ini.example as a starting point.
-A default configuration to get you started would be
-
-[ENV]
-* SAMO_ENV=dev
-* HOST=localhost
-
-[DB] #leave these blank to use SQLite
-* SAMO_SERVER=your_server
-* SAMO_DB=your_db
-* SAMO_USER=your_user
-* SAMO_PASS=your_password
+2. Create a config.ini file - use config.ini.example as a starting point. Just fill in the required entries.
 
 3. Run the management commands as follows
 
-`python manage.py initdb` this will initialize the database (create the database objects)
+* `python manage.py initdb` this will initialize the database (create the database objects)
 
-`python manage.py populate` this will populate the database with play data, including an admin user (please see management section below).
+* *optional*: `python manage.py populate` this will populate the database with play data, including an admin user (please see management section below).
 
-4. The final step would be starting the applycation by running
+4. Set an environment variable FLASK_ENV with the value of *development*
+
+5. The final step would be starting the application by running
 
 `python run.py`
 
 
 ## Management
 
-The app is initialized with the following credentials, as seen in manage.py.
-
-* username="admin",
-* email="test@test.com"
-* password="admin"
-
 The samo-cms/manage.py file executes basic managing tasks, including:
 * initdb - initializes the databases (SQLite by default)
-* populate - populates tables with test data from [here](http://www.lipsum.com/)
+* create_admin - instantiates an admin user with the following credentials. Please remember to remove it as soon as the setup is complete. 
+    * username="admin",
+    * email="admin@example.com"
+    * password="admin"
 * dropdb - DROPS all tables
 
 Usage example: 
-`python manage.py initdb`
+`python manage.py initdb` &&
+`python manage.py create_admin`
+
+Also, the manage.py file is the interface to Flask-Migrate for database migrations. Commands should start with
+`python manage.py migrations`, for example in order to establish an initial migration, run:
+* `python manage.py migrations init`
+
+## Credits
+
+Samo-CMS started as a learning by doing project. The following resources, among others, proved of invaluable help:
+
+* Reindert-Jan Ekker's course ["Introduction to the Flask Microframework"](https://github.com/gonzigonz/Pluralsight---Python-Flask-Apps) on [Pluralsight](https://www.pluralsight.com/courses/flask-micro-framework-introduction) and the boilerplate project I've built while following his course.
+* Miguel Grinberg's excellent, [extensive tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) on Flask
+* Realpython - great, detailed [instructions](https://realpython.com/handling-email-confirmation-in-flask/)
+* Nick Janetakis' [blog](https://nickjanetakis.com/blog/dockerize-a-flask-celery-and-redis-application-with-docker-compose)
