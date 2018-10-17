@@ -126,10 +126,10 @@ class Comment(db.Model):
         return Comment.query.all()
 
     def __str__(self):
-        return self.name + ' : ' + self.content
+        return self.comment_user.displayname + ' : ' + self.content
 
     def __repr__(self):
-        return self.name + ' : ' + self.content
+        return self.comment_user.displayname + ' : ' + self.content
 
 
 roles_users = db.Table('roles_users',

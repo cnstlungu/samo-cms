@@ -38,18 +38,42 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                {% if current_user.is_authenticated:%}
-                <li class="nav-item"><a href="/admin" class="nav-link">Administration</a></li>
+                {% if current_user.is_authenticated %}
+
+                {% if current_user.roles | intersect(['Admin','Contributor']) %}
+
+                <li class="nav-item"><a href="{{ url_for('blog.add') }} " class="nav-link">Add post</a></li>
+
                 {% endif %}
 
+                <li class="nav-item dropdown">
 
-                {% if current_user.is_authenticated:%}
-                <li class="nav-item"><a href="{{ url_for('blog.add') }} " class="nav-link">Add post</a></li>
-                <li class="nav-item"><a href="{{ url_for('auth.logout') }}" class="nav-link">Log out</a></li>
+
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My account
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ url_for('auth.user', username=current_user.username) }} ">My
+                            profile</a>
+
+
+                        {% if current_user.roles | intersect(['Admin']) %}
+
+                        <a class="dropdown-item" href="/admin">Administration</a>
+
+                        {% endif %}
+
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log out</a>
+                    </div>
+                </li>
+
                 {% else %}
                 <li class="nav-item"><a href="{{ url_for('auth.login') }}" class="nav-link">Log in</a></li>
                 {% endif %}
-                {% if not current_user.is_authenticated:%}
+                {% if not current_user.is_authenticated %}
                 <li class="nav-item"><a href="{{ url_for('auth.signup') }}" class="nav-link">Sign up</a></li>
                 {% endif %}
                 <li class="nav-item"><a href="{{ url_for('about') }}" class="nav-link">About</a></li>
@@ -134,7 +158,6 @@
 
 </div>
 
-</div>
 <div>
     <footer>
 

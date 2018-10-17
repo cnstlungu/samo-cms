@@ -12,7 +12,7 @@ from . import AUTH
 from .confirmation_email import send_email
 from .forms import LoginForm, SignupForm
 from .token import generate_confirmation_token, confirm_token
-from ..models import User, get_default_role
+from ..models import User, get_default_role, Post, Comment
 
 
 @AUTH.route("/login", methods=["GET", "POST"])
@@ -102,6 +102,9 @@ def confirm_email(token):
 @AUTH.route('/resend')
 @login_required
 def resend_confirmation():
+    if current_user.confirmed:
+        flash('Your account is already confirmed!', 'warning')
+        return redirect('index')
     token = generate_confirmation_token(current_user.email)
     confirm_url = url_for('auth.confirm_email', token=token, _external=True)
     html = render_template('auth/activate.html', confirm_url=confirm_url)
@@ -115,14 +118,16 @@ def resend_confirmation():
 @login_required
 def unconfirmed():
     if current_user.confirmed:
+        flash('Your account is already confirmed!', 'warning')
         return redirect('index')
     flash('Please confirm your account!', 'warning')
     return render_template('auth/unconfirmed.html')
 
 
 @AUTH.route('/user/<username>')
-@login_required
 def user(username):
     _user = User.query.filter_by(username=username).first_or_404()
+    _posts = Post.query.filter(Post.user_id == _user.id).all()
+    _comments = Comment.query.filter(Comment.user_id == _user.id).all()
 
-    return render_template('auth/user.html', user=_user)
+    return render_template('auth/user.html', user=_user, posts=_posts, comments=_comments)

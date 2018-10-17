@@ -36,8 +36,12 @@
 <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
 <script>
 $(document).ready(function(){
-    var tags = {{ all_tags()|map(attribute='name')|list|tojson|safe }};
-   $('#tags').select2({tags: tags, width: 'resolve', tokenSeparators: [",", " "]});
+    var tags = {;
+    {
+        all_tags() | map(attribute = 'name') | list | tojson | safe
+    }
+}
+    $('#tags').select2({tags: tags, width: 'resolve', tokenSeparators: [",", " "]});
    });
 </script>
 {% endblock %}

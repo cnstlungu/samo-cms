@@ -7,8 +7,23 @@
 
 {% with posts = posts, short= True, trunc_limit = 1000, paginated = False %}
 
+{%if posts.count() ==0 %}
+
+<br>
+<br>
+
+<p>The search returned no results. Return to the <a href="{{ url_for('index') }}">main page.</a></p>
+
+
+{% else %}
+
 {% include "blog/post_list.html" %}
+
+{% endif %}
 
 {% endwith %}
 
 {% endblock %}
+
+
+

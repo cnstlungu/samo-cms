@@ -9,10 +9,11 @@
         </li>
         {% for t in post.comments %}
         <li class="list-group-item clearfix">
-            <div class="col-md-3 avatar">
-                <b> {{t.comment_user.displayname}} </b> · {{moment(t.date).fromNow()}}
+            <div class="col-md-4 avatar">
+                <b> <a href="{{url_for('auth.user',username=t.comment_user.username)}}">
+                    {{t.comment_user.displayname}} </a> </b> · {{moment(t.date).fromNow()}}
             </div>
-            <div class="col-md-9 comment-text">
+            <div class="col-md-8 comment-text">
 
 
                 {% if not t.hidden %}
@@ -53,7 +54,7 @@
 
 {% else %}
 
-Please signup or login to comment on this topic.
+Please signup or login to comment.
 
 
 {% endif %}

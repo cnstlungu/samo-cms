@@ -15,6 +15,11 @@ app = Flask(__name__)  # pylint: disable=invalid-name
 app.config.from_object('samo.config')
 app.config.from_object(CONFIG_BY_NAME[ENVIRONMENT])
 
+
+@app.template_filter('intersect')
+def intersect(a, b):
+    return set(a).intersection(b)
+
 csrf = CSRFProtect()  # pylint: disable=invalid-name
 csrf.init_app(app)
 

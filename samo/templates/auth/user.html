@@ -7,10 +7,85 @@ Profile - {{ user.displayname }}
 
 {% block content %}
 <article>
-	<header>
-        <h2>Profile - <b>{{ user.displayname }}</b></h2>
+    <header>
+        <h2><b>{{ user.displayname }}'s </b>profile</h2>
 
-	</header>
+    </header>
+
+</article>
+
+<br>
+<br>
+
+{% if user == current_user %}
+
+<table class="table table-hover">
+    <tbody>
+    <tr>
+        <th scope="row">Role</th>
+        <td>{{user.roles}}</td>
+    </tr>
+    <tr>
+        <th scope="row">Joined on</th>
+        <td>{{user.confirmed_on}}</td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<br>
+
+{% endif %}
+
+<article>
+    <header>
+        <h3>Posts</h3>
+    </header>
+    {% if posts|length > 0 %}
+
+    {% for post in posts %}
+
+    <ul>
+        <li><a href="{{ url_for('blog.detail', slug=post.slug) }}">{{post.title}}</a></li>
+    </ul>
+    {% endfor %}
+
+    {% else %}
+
+    The user has no posts.
+
+
+    {% endif %}
+
+
+</article>
+<br>
+<br>
+<article>
+    <header>
+        <h3>Comments</h3>
+    </header>
+    {% if comments|length > 0 %}
+
+    {% for comment in comments %}
+
+
+    <ul>
+        <li><a href="{{ url_for('blog.detail', slug=comment.posts.slug) }}">{{comment.posts.title}}</a>
+            <ul>
+                <li>
+                    {{comment.content}}
+                </li>
+            </ul>
+        </li>
+    </ul>
+    {% endfor %}
+
+    {% else %}
+
+    The user has no comments.
+
+    {% endif %}
 
 </article>
 
@@ -19,4 +94,7 @@ Profile - {{ user.displayname }}
 
 {% endblock %}
 
+{% endblock %}
+
+{% block sidebar %}
 {% endblock %}
