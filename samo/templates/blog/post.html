@@ -40,8 +40,8 @@
 
         {% if current_user.is_authenticated %}
                 {% if current_user == post.user or 'Admin' in current_user.roles %}
-    • <a href="{{ url_for('blog.edit_post', post_id=post.id) }}">edit</a>
-    • <a href="{{ url_for('blog.delete_post', post_id=post.id) }}">delete</a>
+    • <a href="{{ url_for('blog.edit_post', post_id=post.id) }}" id="editpost">edit</a>
+    • <a href="{{ url_for('blog.delete_post', post_id=post.id) }}" id="deletepost">delete</a>
     {% endif %}
 
                 {% endif %}

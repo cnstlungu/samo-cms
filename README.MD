@@ -15,7 +15,7 @@ The application provides blogging functionality, including:
 For Python packages, please see the [requirements.txt](requirements.txt) file.
 
 #### Database
-The development has been done with MySQL, but any database supported by [SQLAlchemy](https://docs.sqlalchemy.org/en/latest/core/engines.html)  should work with little or no adjustments.
+The testing has been done with MySQL, but any database supported by [SQLAlchemy](https://docs.sqlalchemy.org/en/latest/core/engines.html)  should work with little to no adjustments.
 
 #### Redis
 The application requires Redis as its task queue.
