@@ -10,7 +10,7 @@ config = configparser.ConfigParser()  # pylint: disable=invalid-name
 config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini'))
 
 ENVIRONMENT = os.environ['FLASK_ENV']
-
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     """
@@ -32,7 +32,6 @@ class NoDBDevelopmentConfig(Config):
     """
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    BASEDIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'database.db')
 
 
@@ -42,12 +41,20 @@ class DevelopmentConfig(Config):
     """
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    _dbtype = config.get(ENVIRONMENT, 'DB_TYPE')
     _pass = config.get(ENVIRONMENT, 'DB_PASS')
     _server = config.get(ENVIRONMENT, 'DB_SERVER')
     _db = config.get(ENVIRONMENT, 'DB_NAME')
     _user = config.get(ENVIRONMENT, 'DB_USER')
 
-    SQLALCHEMY_DATABASE_URI = f'mysql://{_user}:{_pass}@{_server}/{_db}?charset=utf8mb4'
+    SQLALCHEMY_DATABASE_URI = None
+
+    if _dbtype == 'mysql':
+        SQLALCHEMY_DATABASE_URI = f'mysql://{_user}:{_pass}@{_server}/{_db}?charset=utf8mb4'
+    elif _dbtype == 'sqlite':
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'database.db')
+    else:
+        SQLALCHEMY_DATABASE_URI = f'{_dbtype}://{_user}:{_pass}@{_server}/{_db}'
 
 
 class DockerTestingConfig(Config):
@@ -56,12 +63,20 @@ class DockerTestingConfig(Config):
     """
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    _dbtype = config.get(ENVIRONMENT, 'DB_TYPE')
     _pass = config.get(ENVIRONMENT, 'DB_PASS')
     _server = config.get(ENVIRONMENT, 'DB_SERVER')
     _db = config.get(ENVIRONMENT, 'DB_NAME')
     _user = config.get(ENVIRONMENT, 'DB_USER')
 
-    SQLALCHEMY_DATABASE_URI = f'mysql://{_user}:{_pass}@{_server}/{_db}?charset=utf8mb4'
+    SQLALCHEMY_DATABASE_URI = None
+
+    if _dbtype == 'mysql':
+        SQLALCHEMY_DATABASE_URI = f'mysql://{_user}:{_pass}@{_server}/{_db}?charset=utf8mb4'
+    elif _dbtype == 'sqlite':
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'database.db')
+    else:
+        SQLALCHEMY_DATABASE_URI = f'{_dbtype}://{_user}:{_pass}@{_server}/{_db}'
 
 
 CONFIG_BY_NAME = dict(
