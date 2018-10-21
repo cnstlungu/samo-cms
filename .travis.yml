@@ -1,0 +1,10 @@
+language: python
+python:
+- "3.6"
+install:
+- pip install -r requirements.txt
+before_script:
+- export FLASK_ENV="development"
+- export FLASK_APP="$TRAVIS_BUILD_DIR/samo-cms/samo"
+script:
+- pytest -v
