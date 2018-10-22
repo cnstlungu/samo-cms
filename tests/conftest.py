@@ -75,6 +75,6 @@ def create_post_delete(init_db, create_contrib_user):
 
 @pytest.fixture()
 def browser(init_db):
-    browser = Browser('firefox', headless=False)
+    browser = Browser('firefox', headless=True)
     yield browser
     browser.quit()
