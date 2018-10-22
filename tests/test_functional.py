@@ -3,8 +3,8 @@ import pytest
 from samo.config import config
 from samo.core import ENVIRONMENT
 
-SERVER = 'http://' + config.get('HOST', ENVIRONMENT)
-PORT = config.get('PORT', ENVIRONMENT)
+SERVER = 'http://' + config.get('SAMO_HOST', ENVIRONMENT)
+PORT = config.get('SAMO_PORT', ENVIRONMENT)
 
 
 def test_login(browser, create_contrib_user):
