@@ -6,8 +6,33 @@ This module defines the parameters and objects for the Deployment Environments.
 import configparser
 import os
 
-config = configparser.ConfigParser()  # pylint: disable=invalid-name
-config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini'))
+
+class ConfigReader():
+    _config = None
+    _source = None
+
+    def __init__(self, source='env', filename=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')):
+        self._source = source
+        if self._source == 'file':
+            self._config = configparser.ConfigParser()  # pylint: disable=invalid-name
+            self._config.read(filename)
+        elif self._source == 'env':
+            pass
+        else:
+            raise NotImplementedError
+
+    def get(self, key, environment):
+
+        if self._source == 'file' and environment:
+            try:
+                return self._config.get(environment, key)
+            except KeyError:
+                pass
+        elif self._source == 'env':
+            return os.environ[key]
+
+
+config = ConfigReader()
 
 ENVIRONMENT = os.environ['FLASK_ENV']
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -19,11 +44,11 @@ class Config:
     SECRET_KEY = os.urandom(24)
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    CELERY_BROKER_URL = config.get(ENVIRONMENT, 'CELERY_BROKER_URL')
-    CELERY_RESULT_BACKEND = config.get(ENVIRONMENT, 'CELERY_RESULT_BACKEND')
-    MAIL_SENDGRID_API_KEY = config.get(ENVIRONMENT, 'MAIL_SENDGRID_API_KEY')
-    MAIL_DEFAULT_SENDER = config.get(ENVIRONMENT, 'MAIL_DEFAULT_SENDER')
-    SECURITY_PASSWORD_SALT = config.get(ENVIRONMENT, 'SECURITY_PASSWORD_SALT')
+    CELERY_BROKER_URL = config.get('SAMO_CELERY_BROKER_URL', ENVIRONMENT)
+    CELERY_RESULT_BACKEND = config.get('SAMO_CELERY_RESULT_BACKEND', ENVIRONMENT)
+    MAIL_SENDGRID_API_KEY = config.get('SAMO_MAIL_SENDGRID_API_KEY', ENVIRONMENT)
+    MAIL_DEFAULT_SENDER = config.get('SAMO_MAIL_DEFAULT_SENDER', ENVIRONMENT)
+    SECURITY_PASSWORD_SALT = config.get('SAMO_SECURITY_PASSWORD_SALT', ENVIRONMENT)
 
 
 class NoDBDevelopmentConfig(Config):
@@ -41,11 +66,11 @@ class DevelopmentConfig(Config):
     """
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    _dbtype = config.get(ENVIRONMENT, 'DB_TYPE')
-    _pass = config.get(ENVIRONMENT, 'DB_PASS')
-    _server = config.get(ENVIRONMENT, 'DB_SERVER')
-    _db = config.get(ENVIRONMENT, 'DB_NAME')
-    _user = config.get(ENVIRONMENT, 'DB_USER')
+    _dbtype = config.get('SAMO_DB_TYPE', ENVIRONMENT)
+    _pass = config.get('SAMO_DB_PASS', ENVIRONMENT)
+    _server = config.get('SAMO_DB_SERVER', ENVIRONMENT)
+    _db = config.get('SAMO_DB_NAME', ENVIRONMENT)
+    _user = config.get('SAMO_DB_USER', ENVIRONMENT)
 
     SQLALCHEMY_DATABASE_URI = None
 
@@ -63,11 +88,11 @@ class DockerTestingConfig(Config):
     """
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    _dbtype = config.get(ENVIRONMENT, 'DB_TYPE')
-    _pass = config.get(ENVIRONMENT, 'DB_PASS')
-    _server = config.get(ENVIRONMENT, 'DB_SERVER')
-    _db = config.get(ENVIRONMENT, 'DB_NAME')
-    _user = config.get(ENVIRONMENT, 'DB_USER')
+    _dbtype = config.get('SAMO_DB_TYPE', ENVIRONMENT)
+    _pass = config.get('SAMO_DB_PASS', ENVIRONMENT)
+    _server = config.get('SAMO_DB_SERVER', ENVIRONMENT)
+    _db = config.get('SAMO_DB_NAME', ENVIRONMENT)
+    _user = config.get('SAMO_DB_USER', ENVIRONMENT)
 
     SQLALCHEMY_DATABASE_URI = None
 

@@ -1,10 +1,19 @@
 language: python
 python:
-- "3.6"
+- 3.6
 install:
 - pip install -r requirements.txt
 before_script:
-- export FLASK_ENV="development"
-- export FLASK_APP="$TRAVIS_BUILD_DIR/samo-cms/samo"
+- mysql -e "CREATE DATABASE samo;"
+- python run.py &
 script:
 - pytest -v
+services:
+- redis-server
+- mysql
+env:
+- MOZ_HEADLESS=1
+- FLASK_ENV="development"
+- FLASK_APP="$TRAVIS_BUILD_DIR/samo-cms/samo"
+addons:
+  firefox: latest
