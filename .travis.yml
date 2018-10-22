@@ -4,9 +4,10 @@ python:
 install:
 - pip install -r requirements.txt
 env:
-- MOZ_HEADLESS=1
-- FLASK_ENV="development"
-- FLASK_APP="$TRAVIS_BUILD_DIR/samo-cms/samo"
+  global:
+  - MOZ_HEADLESS=1
+  - FLASK_ENV="development"
+  - FLASK_APP="$TRAVIS_BUILD_DIR/samo-cms/samo"
 services:
 - redis-server
 - mysql
