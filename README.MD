@@ -1,5 +1,6 @@
 # Description
 
+
 A simple CMS/blog in Flask
 
 The application provides blogging functionality, including:
