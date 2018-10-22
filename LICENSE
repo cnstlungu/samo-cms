@@ -1,3 +1,8 @@
+This code is distributed under multiple licenses, namely:
+- MIT License for all code which is not third-party (external dependencies) or is not licensed under another license.
+- The respective license for third-party code (external dependencies)
+
+[General License]
 MIT License
 
 Copyright (c) 2018 Constantin Lungu
@@ -19,3 +24,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+[Third-party Licenses]
+The third party packages (external dependencies) are distributed under their respective licenses, including:
+* select2 (including JS code and assets)  is distributed under Creative Commons Attribution 4.0 International
