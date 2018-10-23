@@ -1,3 +1,8 @@
+# pylint: disable-msg=C0103
+"""
+Provides the handler and logger necessary for piping the logs into the database.
+"""
+
 import logging
 import traceback
 
@@ -6,6 +11,9 @@ from samo.models import Log
 
 
 class SQLAlchemyHandler(logging.Handler):
+    """
+    Logging handler for SQLAlchemy
+    """
 
     def emit(self, record):
         trace = None
@@ -21,17 +29,17 @@ class SQLAlchemyHandler(logging.Handler):
         db.session.commit()
 
 
-logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-ch = SQLAlchemyHandler()  # pylint: disable=invalid-name
+ch = SQLAlchemyHandler()
 ch.setLevel(logging.INFO)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')  # pylint: disable=invalid-name
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 
 loggers = [logger, logging.getLogger('werkzeug'), logging.getLogger('sqlalchemy'), \
-           logging.getLogger('flask.app')]  # pylint: disable=invalid-name
+           logging.getLogger('flask.app')]
 
 for l in loggers:
     l.addHandler(ch)

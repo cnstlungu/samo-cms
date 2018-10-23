@@ -83,6 +83,11 @@ def signup():
 @login_required
 @AUTH.route('/confirm/<token>')
 def confirm_email(token):
+    """
+    Confirms the email sent for user verification, using the token provided
+    :param token:
+    :return: flask message depending on the outcome
+    """
     try:
         email = confirm_token(token)
     except Exception:  # pylint: disable=broad-except
@@ -102,6 +107,10 @@ def confirm_email(token):
 @AUTH.route('/resend')
 @login_required
 def resend_confirmation():
+    """
+    Sends a confirmation email using an async task
+    :return: renders a html template
+    """
     if current_user.confirmed:
         flash('Your account is already confirmed!', 'warning')
         return redirect('index')
@@ -117,6 +126,10 @@ def resend_confirmation():
 @AUTH.route('/unconfirmed')
 @login_required
 def unconfirmed():
+    """
+    A route for unconfirmed users
+    :return: renders a html template
+    """
     if current_user.confirmed:
         flash('Your account is already confirmed!', 'warning')
         return redirect('index')
@@ -126,6 +139,11 @@ def unconfirmed():
 
 @AUTH.route('/user/<username>')
 def user(username):
+    """
+    Dispays a user personal profile. Some information (role, date joined) is only
+    visible to the user, whereas other (posts, comments) is public
+    :rtype: renders a html template
+    """
     _user = User.query.filter_by(username=username).first_or_404()
     _posts = Post.query.filter(Post.user_id == _user.id).all()
     _comments = Comment.query.filter(Comment.user_id == _user.id).all()

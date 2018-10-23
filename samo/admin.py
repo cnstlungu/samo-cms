@@ -17,6 +17,11 @@ from samo.models import User, Post, Tag, Comment, Role
 
 
 def is_admin(user):
+    """
+    Verifies is a given user is an admin or not
+    :param user:
+    :return: bool
+    """
     if user.is_authenticated:
         return 'Admin' in user.roles
     return False

@@ -132,9 +132,9 @@ class Comment(db.Model):
         return self.comment_user.displayname + ' : ' + self.content
 
 
-roles_users = db.Table('roles_users',
+ROLES_USERS = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))  # pylint: disable=invalid-name
+                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
 class User(db.Model, UserMixin):
@@ -148,7 +148,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='user', lazy='dynamic')
     comments = db.relationship('Comment', backref='comment_user', lazy='dynamic')
     password_hash = db.Column(db.String(120))
-    roles = db.relationship('Role', secondary=roles_users,
+    roles = db.relationship('Role', secondary=ROLES_USERS,
                             backref=db.backref('users', lazy='dynamic'))
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
@@ -192,6 +192,9 @@ class User(db.Model, UserMixin):
 
 
 class Role(db.Model):
+    """
+    Defines the Role model
+    """
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
@@ -211,6 +214,9 @@ class Role(db.Model):
 
 
 class Log(db.Model):
+    """
+    Defines the Log Model, to be used in logging
+    """
     __tablename__ = 'logs'
     id = db.Column(db.Integer, primary_key=True)  # auto incrementing
     logger = db.Column(db.String(100))  # the name of the logger. (e.g. myapp.views)
@@ -234,6 +240,10 @@ class Log(db.Model):
 
 @event.listens_for(Role.__table__, 'after_create')
 def insert_initial_values(*args, **kwargs):  # pylint: disable=unused-argument
+    """
+    Ensures the 3 basic roles required are created
+    :rtype: object
+    """
     db.session.add(Role(name='Admin', description='admin'))
     db.session.add(Role(name='Contributor', description='contributor'))
     db.session.add(Role(name='User', description='regular user'))
@@ -242,4 +252,10 @@ def insert_initial_values(*args, **kwargs):  # pylint: disable=unused-argument
 
 @db.event.listens_for(Role, "after_insert")
 def get_default_role(*args, **kwargs):  # pylint: disable=unused-argument
+    """
+    Sets up a default role to be assigned to new users.
+    :param args:
+    :param kwargs:
+    :return:
+    """
     return Role.query.filter(Role.name == 'User').first_or_404()
