@@ -1,20 +1,13 @@
 # Description
 [![Build Status](https://travis-ci.org/cnstlungu/samo-cms.svg?branch=master)](https://travis-ci.org/cnstlungu/samo-cms)
-
 <div>
-
 <img src="http://flask.pocoo.org/static/logo/flask.svg" height="75px"/>
-
 <img src="https://www.docker.com/sites/default/files/vertical.png" height="75px"/>
-
 <img src="https://www.mysql.com/common/logos/logo-mysql-170x115.png" height="75px"/>
-
 <img src="http://download.redis.io/logocontest/82.png" height="75px"/>
-
 </div>
 <br>
 <br>
-
 
 
 A Flask CMS/blog 
