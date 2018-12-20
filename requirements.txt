@@ -9,7 +9,7 @@ celery==4.2.1
 Click==7.0
 coverage==4.5.1
 Flask==1.0.2
-Flask-Admin==1.5.2
+Flask-Admin==1.5.3
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
 Flask-Mail-SendGrid==0.1.7
