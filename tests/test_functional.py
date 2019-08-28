@@ -17,6 +17,7 @@ def test_login(browser, create_contrib_user):
     assert browser.is_text_present('Logged in successfully as test_contrib')
 
 
+@pytest.mark.skip(reason="Currently failing due to splinter bug")
 def test_add(browser, create_contrib_user):
     url = f'{SERVER}:{PORT}/auth/login'
     browser.visit(url)
