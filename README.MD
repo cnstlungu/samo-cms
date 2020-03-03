@@ -1,7 +1,7 @@
 # Description
 [![Build Status](https://travis-ci.org/cnstlungu/samo-cms.svg?branch=master)](https://travis-ci.org/cnstlungu/samo-cms)
 <div>
-<img src="https://en.wikipedia.org/wiki/Flask_(web_framework)#/media/File:Flask_logo.svg" height="75px"/>
+<img src="https://en.wikipedia.org/wiki/Flask_(web_framework)#/media/File:Flask_logo.svg?sanitize=true" height="75px"/>
 <img src="https://www.docker.com/sites/default/files/vertical.png" height="75px"/>
 <img src="https://www.mysql.com/common/logos/logo-mysql-170x115.png" height="75px"/>
 <img src="http://download.redis.io/logocontest/82.png" height="75px"/>
