@@ -37,7 +37,6 @@ more-itertools==8.2.0
 mysqlclient==1.4.6
 nltk==3.4.5
 packaging==20.1
-pkg-resources==0.0.0
 pluggy==0.13.1
 py==1.8.1
 pylint==2.4.4
