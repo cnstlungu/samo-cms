@@ -44,7 +44,7 @@ class ConfigReader():
             return None
 
 
-CONFIG = ConfigReader(source="file")
+CONFIG = ConfigReader(source="env")
 
 ENVIRONMENT = os.environ['FLASK_ENV']
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
