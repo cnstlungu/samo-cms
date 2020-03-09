@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-cd /home/dev/repos/samo-cms/
-export FLASK_ENV="development"
+cd ..
+FLASK_ENV=${FLASK_ENV:-"development"}
+export FLASK_ENV
 source venv/bin/activate
 celery worker -A samo.core.celery --loglevel=info
