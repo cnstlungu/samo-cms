@@ -4,4 +4,6 @@ config.ini
 __pycache__/
 venv/
 *.db
-.log
+*.log
+.idea/
+.pytest_cache/

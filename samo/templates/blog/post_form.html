@@ -16,12 +16,16 @@
         <form action="" method="post">
             {{form.hidden_tag()}}
             <table>
-			    {{ render_field(form.title,class_="form-control",  rows=15, cols = 50) }}
-                {{ render_field(form.content, class_="form-control",  rows=15, cols = 50) }}
+                {{ render_field(form.title,class_="form-control", rows=15, cols = 50) }}
                 {{ render_field(form.ptags, size=50, id="tags") }}
+                {{ render_field(form.content) }}
+                <br>
+                {{ ckeditor.load() }}
+                {{ ckeditor.config(name='content') }}
                 <tr class="submit">
                     <td></td>
-                    <td><button id="postadd-submit" type="submit" class="btn btn-primary">Submit</button>
+                    <td>
+                        <button id="postadd-submit" type="submit" class="btn btn-primary">Submit</button>
                     </td>
                 </tr>
             </table>

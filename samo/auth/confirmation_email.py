@@ -8,7 +8,7 @@ from samo.core import app, mail, celery
 
 
 @celery.task(bind=True)
-def send_email(recipients, subject, template):
+def send_email(self, recipients, subject, template):
     """
     Sends an email being provided a destination, subject and template.
     :rtype: void

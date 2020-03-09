@@ -1,5 +1,3 @@
-import pytest
-
 from samo.config import CONFIG
 from samo.core import ENVIRONMENT
 
@@ -17,7 +15,6 @@ def test_login(browser, create_contrib_user):
     assert browser.is_text_present('Logged in successfully as test_contrib')
 
 
-@pytest.mark.skip(reason="Currently failing due to splinter bug")
 def test_add(browser, create_contrib_user):
     url = f'{SERVER}:{PORT}/auth/login'
     browser.visit(url)
@@ -28,8 +25,8 @@ def test_add(browser, create_contrib_user):
     url = f'{SERVER}:{PORT}/blog/add'
     browser.visit(url)
     browser.find_by_id('title').first.fill('DummyTitle01')
-    browser.find_by_id('content').first.fill('Ana are mere. Ann has apples. У Анны есть яблоки.')
     browser.find_by_id('tags').first.fill('tag1,tag2,tag3 ')
+
     title = browser.find_by_tag('h3').first
     title.click()
     button = browser.find_by_id('postadd-submit').first
@@ -54,7 +51,6 @@ def test_comments(browser, create_post_edit, create_contrib_user):
     assert browser.is_text_present("test")
 
 
-@pytest.mark.skip(reason="Currently failing due to splinter bug")
 def test_signup(browser):
     url = f'{SERVER}:{PORT}/auth/signup'
     browser.visit(url)
@@ -75,18 +71,16 @@ def test_edit(browser, create_post_edit, create_contrib_user):
     browser.fill('password', 'test')
     button = browser.find_by_id('login-submit')
     button.click()
-
     url = f'{SERVER}:{PORT}/blog/post/' + create_post_edit.slug
     browser.visit(url)
     button = browser.find_by_id('editpost').first
     button.click()
     browser.find_by_id('title').first.fill('111 aaa')
-    browser.find_by_id('content').first.fill('222 bbb')
     browser.find_by_id('tags').first.fill('333, ccc')
     button = browser.find_by_id('postadd-submit').first
     button.click()
 
-    assert (browser.is_text_present('111 aaa') and browser.is_text_present('222 bbb') and browser.is_text_present(
+    assert (browser.is_text_present('111 aaa') and browser.is_text_present(
         '333'))
 
 

@@ -5,6 +5,7 @@ the Flask (app) object and the database object.
 """
 from celery import Celery
 from flask import Flask
+from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail_sendgrid import MailSendGrid
 from flask_sqlalchemy import SQLAlchemy
@@ -15,6 +16,8 @@ from samo.config import CONFIG_BY_NAME, ENVIRONMENT
 app = Flask(__name__)
 app.config.from_object('samo.config')
 app.config.from_object(CONFIG_BY_NAME[ENVIRONMENT])
+ckeditor = CKEditor()
+ckeditor.init_app(app)
 
 
 @app.template_filter('intersect')

@@ -69,7 +69,7 @@ def signup():
         html = render_template('auth/activate.html', confirm_url=confirm_url)
         subject = "Please confirm your email"
 
-        send_email.delay(recipients=_user.email, subject=subject, template=html)
+        send_email.delay(_user.email, subject, html)
 
         login_user(_user)
 

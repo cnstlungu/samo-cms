@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from splinter import Browser
 from sqlalchemy.exc import OperationalError
@@ -7,8 +5,6 @@ from sqlalchemy.exc import OperationalError
 from samo.core import app as flask_app
 from samo.core import db
 from samo.models import User, Post, Role
-
-os.environ["PATH"] += ':' + r'/home/dev/assets/chromedriver_linux64'
 
 
 @pytest.fixture
@@ -75,6 +71,6 @@ def create_post_delete(init_db, create_contrib_user):
 
 @pytest.fixture()
 def browser(init_db):
-    browser = Browser('firefox', headless=True)
+    browser = Browser('firefox', headless=False)
     yield browser
     browser.quit()

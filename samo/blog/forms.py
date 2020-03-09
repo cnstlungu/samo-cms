@@ -2,16 +2,18 @@
 """
 This module contains the definitions of the forms used by the blog blueprint.
 """
+from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm as Form
 from wtforms.fields import StringField, TextAreaField
 from wtforms.validators import Regexp, DataRequired
+
 
 class PostForm(Form):
     """
     Defines a post form. Contains method to validate it.
     """
     title = StringField('Title:')
-    content = TextAreaField('Content:')
+    content = CKEditorField('Content')
     ptags = StringField('Tags',
                         validators=[Regexp(r'^[a-zA-Z0-9, ]*$', message="Tags can only contain letters and numbers")])
 
