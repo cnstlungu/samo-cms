@@ -4,7 +4,7 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Flask_logo.svg?sanitize=true" height="75px"/>
 <img src="https://www.docker.com/sites/default/files/vertical.png" height="75px"/>
 <img src="https://www.mysql.com/common/logos/logo-mysql-170x115.png" height="75px"/>
-<img src="http://download.redis.io/logocontest/82.png" height="75px"/>
+<img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Redis_Logo.svg/1200px-Redis_Logo.svg.png?sanitize=true" height="75px"/>
 </div>
 <br>
 <br>
